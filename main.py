@@ -1,13 +1,13 @@
 """
 내 주식 대시보드 v1.0 Beta
-실행 진입점 — PyInstaller EXE / 로컬 직접 실행 / Render 서버 배포 모두 지원
+실행 진입점 — PyInstaller EXE / 로컬 직접 실행 / Render·Fly.io 클라우드 배포 모두 지원
 """
 import sys, os, threading, time, socket
 
 APP_VERSION = "v1.0 Beta"
 
-# Render 등 클라우드 환경: PORT 환경변수 사용
-IS_SERVER = bool(os.environ.get('RENDER') or os.environ.get('SERVER_MODE'))
+# 클라우드 환경 감지 (Render / Fly.io / 수동 서버모드)
+IS_SERVER = bool(os.environ.get('RENDER') or os.environ.get('FLY') or os.environ.get('SERVER_MODE'))
 
 def find_free_port(start=5000, end=5099):
     for port in range(start, end):

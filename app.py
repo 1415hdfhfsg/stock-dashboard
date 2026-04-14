@@ -23,13 +23,13 @@ def _resource(rel):
 def _get_data_dir():
     """
     데이터 저장 디렉토리 결정 순서:
-      1. Render 클라우드: /data (환경변수 RENDER 존재 시)
+      1. Render / Fly.io 클라우드: /data (환경변수 RENDER 또는 FLY 존재 시)
       2. EXE 옆 config.json 의 data_dir (PyInstaller 빌드)
       3. EXE 옆 폴더 (PyInstaller 기본값)
       4. 소스 실행 시 스크립트 폴더
     """
-    # Render 클라우드 배포: 영구 디스크 /data 사용
-    if os.environ.get('RENDER'):
+    # 클라우드 배포 (Render / Fly.io): 영구 디스크 /data 사용
+    if os.environ.get('RENDER') or os.environ.get('FLY'):
         d = '/data'
         os.makedirs(d, exist_ok=True)
         return d
