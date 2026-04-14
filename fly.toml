@@ -1,5 +1,5 @@
 # Fly.io 배포 설정 — 내 주식 대시보드
-app = "my-stock-dashboard"
+app = "myboard"
 primary_region = "nrt"   # 도쿄 (한국에서 가장 가까운 리전)
 
 [build]
