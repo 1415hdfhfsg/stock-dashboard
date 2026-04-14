@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.spec
+
+# 로컬 데이터 (개인 정보 — 절대 커밋하지 말 것)
+dashboard.db
+portfolio.json
+portfolio_import.json
+transactions.json
+config.json
+*.xlsx
+*.xls
+
+# 환경
+.env
+.env.*
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 로그
+*.log
+build_out.txt
+build_err.txt
+
+# Claude
+.claude/
