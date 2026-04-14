@@ -1,5 +1,6 @@
 flask>=3.0.0
 gunicorn>=21.2.0
+psycopg2-binary>=2.9.9
 yfinance>=0.2.40
 pykrx>=1.0.45
 pandas>=2.0.0

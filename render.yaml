@@ -9,7 +9,5 @@ services:
         value: "true"
       - key: PYTHON_VERSION
         value: "3.11.0"
-    disk:
-      name: data
-      mountPath: /data
-      sizeGB: 1
+      - key: DATABASE_URL
+        sync: false   # Render 대시보드에서 직접 입력

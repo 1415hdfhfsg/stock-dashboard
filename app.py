@@ -9,6 +9,15 @@ import pandas as pd
 import numpy as np
 from flask.json.provider import DefaultJSONProvider
 
+# ── DB 모드 결정 (PostgreSQL 우선, 없으면 SQLite) ─────────
+DATABASE_URL = os.environ.get('DATABASE_URL', '')
+IS_POSTGRES  = bool(DATABASE_URL and 'postgres' in DATABASE_URL)
+if IS_POSTGRES:
+    import psycopg2, psycopg2.extras
+    PH = '%s'   # PostgreSQL 파라미터 플레이스홀더
+else:
+    PH = '?'    # SQLite 파라미터 플레이스홀더
+
 # ── 버전 정보 ─────────────────────────────────────────────
 APP_VERSION = "v1.0 Beta"
 APP_NAME    = "내 주식 대시보드"
@@ -87,45 +96,64 @@ def add_no_cache_headers(response):
 
 BASE_DIR = _resource('.')
 
-# ── SQLite DB 초기화 ─────────────────────────────────────
+# ── DB 초기화 ─────────────────────────────────────────────
+_CREATE_TABLE = '''
+    CREATE TABLE IF NOT EXISTS user_data (
+        user_token        TEXT PRIMARY KEY,
+        portfolio         TEXT NOT NULL DEFAULT '{{"holdings":[]}}',
+        transactions      TEXT NOT NULL DEFAULT '[]',
+        wishlist          TEXT NOT NULL DEFAULT '[]',
+        hidden            TEXT NOT NULL DEFAULT '[]',
+        target_prices     TEXT NOT NULL DEFAULT '{{}}',
+        notes             TEXT NOT NULL DEFAULT '{{}}',
+        rebalance_targets TEXT NOT NULL DEFAULT '{{}}',
+        created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+'''
+
 def init_db():
-    """앱 시작 시 DB 테이블 생성 + 신규 컬럼 마이그레이션"""
-    os.makedirs(DATA_DIR, exist_ok=True)
-    con = sqlite3.connect(DATABASE)
-    con.execute('''
-        CREATE TABLE IF NOT EXISTS user_data (
-            user_token        TEXT PRIMARY KEY,
-            portfolio         TEXT NOT NULL DEFAULT '{"holdings":[]}',
-            transactions      TEXT NOT NULL DEFAULT '[]',
-            wishlist          TEXT NOT NULL DEFAULT '[]',
-            hidden            TEXT NOT NULL DEFAULT '[]',
-            target_prices     TEXT NOT NULL DEFAULT '{}',
-            notes             TEXT NOT NULL DEFAULT '{}',
-            rebalance_targets TEXT NOT NULL DEFAULT '{}',
-            created_at        DATETIME DEFAULT CURRENT_TIMESTAMP,
-            updated_at        DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    # 기존 DB 마이그레이션 (컬럼 없으면 추가)
-    for col, default in [
-        ('target_prices',     "'{}'"),
-        ('notes',             "'{}'"),
-        ('rebalance_targets', "'{}'"),
-    ]:
-        try:
-            con.execute(f"ALTER TABLE user_data ADD COLUMN {col} TEXT NOT NULL DEFAULT {default}")
-        except sqlite3.OperationalError:
-            pass
-    con.commit()
-    con.close()
+    if IS_POSTGRES:
+        con = psycopg2.connect(DATABASE_URL)
+        cur = con.cursor()
+        cur.execute(_CREATE_TABLE.replace('{{', '{').replace('}}', '}'))
+        for col, default in [
+            ('target_prices',     "'{}'"),
+            ('notes',             "'{}'"),
+            ('rebalance_targets', "'{}'"),
+        ]:
+            try:
+                cur.execute(f"ALTER TABLE user_data ADD COLUMN IF NOT EXISTS {col} TEXT NOT NULL DEFAULT {default}")
+            except Exception:
+                con.rollback()
+        con.commit()
+        cur.close(); con.close()
+    else:
+        os.makedirs(DATA_DIR, exist_ok=True)
+        con = sqlite3.connect(DATABASE)
+        con.execute(_CREATE_TABLE.replace('{{', '{').replace('}}', '}'))
+        for col, default in [
+            ('target_prices',     "'{}'"),
+            ('notes',             "'{}'"),
+            ('rebalance_targets', "'{}'"),
+        ]:
+            try:
+                con.execute(f"ALTER TABLE user_data ADD COLUMN {col} TEXT NOT NULL DEFAULT {default}")
+            except sqlite3.OperationalError:
+                pass
+        con.commit(); con.close()
 
 init_db()
 
 # ── 요청별 DB 연결 ────────────────────────────────────────
 def get_db():
     if 'db' not in g:
-        g.db = sqlite3.connect(DATABASE)
-        g.db.row_factory = sqlite3.Row
+        if IS_POSTGRES:
+            g.db = psycopg2.connect(DATABASE_URL)
+            g.db.autocommit = False
+        else:
+            g.db = sqlite3.connect(DATABASE)
+            g.db.row_factory = sqlite3.Row
     return g.db
 
 @app.teardown_appcontext
@@ -159,25 +187,35 @@ def set_user_token_cookie(response):
     return response
 
 def _upsert(field: str, value):
-    """user_data 특정 필드 upsert"""
-    db = get_db()
-    db.execute(f'''
+    """user_data 특정 필드 upsert (SQLite / PostgreSQL 공통)"""
+    db  = get_db()
+    sql = f'''
         INSERT INTO user_data (user_token, {field})
-        VALUES (?, ?)
+        VALUES ({PH}, {PH})
         ON CONFLICT(user_token) DO UPDATE SET
-            {field} = excluded.{field},
+            {field} = EXCLUDED.{field},
             updated_at = CURRENT_TIMESTAMP
-    ''', (g.user_token, json.dumps(value, ensure_ascii=False)))
-    db.commit()
+    '''
+    if IS_POSTGRES:
+        cur = db.cursor()
+        cur.execute(sql, (g.user_token, json.dumps(value, ensure_ascii=False)))
+        db.commit(); cur.close()
+    else:
+        db.execute(sql, (g.user_token, json.dumps(value, ensure_ascii=False)))
+        db.commit()
 
 def _fetch(field: str, default):
-    """user_data 특정 필드 조회"""
-    db = get_db()
-    row = db.execute(
-        f'SELECT {field} FROM user_data WHERE user_token=?',
-        (g.user_token,)
-    ).fetchone()
-    return json.loads(row[field]) if row else default
+    """user_data 특정 필드 조회 (SQLite / PostgreSQL 공통)"""
+    db  = get_db()
+    sql = f'SELECT {field} FROM user_data WHERE user_token={PH}'
+    if IS_POSTGRES:
+        cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute(sql, (g.user_token,))
+        row = cur.fetchone(); cur.close()
+        return json.loads(row[field]) if row else default
+    else:
+        row = db.execute(sql, (g.user_token,)).fetchone()
+        return json.loads(row[field]) if row else default
 
 def load_portfolio():
     return _fetch('portfolio', {'holdings': []})
@@ -281,8 +319,8 @@ def api_version():
 @app.route('/api/settings')
 def api_settings():
     return jsonify({
-        'data_dir':    DATA_DIR,
-        'db_path':     DATABASE,
+        'data_dir':    DATA_DIR if not IS_POSTGRES else 'Supabase PostgreSQL',
+        'db_path':     DATABASE if not IS_POSTGRES else DATABASE_URL.split('@')[-1],
         'user_token':  g.user_token,
         'is_frozen':   getattr(sys, 'frozen', False),
     })
