@@ -113,21 +113,30 @@ _CREATE_TABLE = '''
 '''
 
 def init_db():
+    global IS_POSTGRES, PH
     if IS_POSTGRES:
-        con = psycopg2.connect(DATABASE_URL)
-        cur = con.cursor()
-        cur.execute(_CREATE_TABLE.replace('{{', '{').replace('}}', '}'))
-        for col, default in [
-            ('target_prices',     "'{}'"),
-            ('notes',             "'{}'"),
-            ('rebalance_targets', "'{}'"),
-        ]:
-            try:
-                cur.execute(f"ALTER TABLE user_data ADD COLUMN IF NOT EXISTS {col} TEXT NOT NULL DEFAULT {default}")
-            except Exception:
-                con.rollback()
-        con.commit()
-        cur.close(); con.close()
+        try:
+            con = psycopg2.connect(DATABASE_URL, connect_timeout=10)
+            cur = con.cursor()
+            cur.execute(_CREATE_TABLE.replace('{{', '{').replace('}}', '}'))
+            for col, default in [
+                ('target_prices',     "'{}'"),
+                ('notes',             "'{}'"),
+                ('rebalance_targets', "'{}'"),
+            ]:
+                try:
+                    cur.execute(f"ALTER TABLE user_data ADD COLUMN IF NOT EXISTS {col} TEXT NOT NULL DEFAULT {default}")
+                except Exception:
+                    con.rollback()
+            con.commit()
+            cur.close(); con.close()
+            print("[DB] PostgreSQL 연결 성공")
+        except Exception as e:
+            print(f"[DB] PostgreSQL 연결 실패, SQLite로 전환: {e}")
+            IS_POSTGRES = False
+            PH = '?'
+            init_db()
+            return
     else:
         os.makedirs(DATA_DIR, exist_ok=True)
         con = sqlite3.connect(DATABASE)
@@ -142,6 +151,7 @@ def init_db():
             except sqlite3.OperationalError:
                 pass
         con.commit(); con.close()
+        print("[DB] SQLite 사용:", DATABASE)
 
 init_db()
 

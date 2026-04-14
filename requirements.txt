@@ -9,4 +9,3 @@ requests>=2.31.0
 feedparser>=6.0.10
 openpyxl>=3.1.0
 pandas_ta>=0.3.14b
-pyinstaller>=6.0.0
