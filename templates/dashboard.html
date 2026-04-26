@@ -42,7 +42,6 @@ tailwind.config = {
   .neg { color: #74b9ff; }
   .badge-pos { background: linear-gradient(135deg, #ff6b6b20, #ff6b6b10); color: #ff6b6b; border: 1px solid #ff6b6b30; }
   .badge-neg { background: linear-gradient(135deg, #74b9ff20, #74b9ff10); color: #0984e3; border: 1px solid #74b9ff30; }
-  .sector-bar { transition: width 0.8s cubic-bezier(0.4,0,0.2,1); border-radius: 4px; }
   .stat-card { position: relative; overflow: hidden; }
   .stat-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 80px; height: 80px; border-radius: 50%; opacity: 0.1; }
   .stat-card:nth-child(1)::before { background: #6c5ce7; }
@@ -66,36 +65,92 @@ tailwind.config = {
   .grade-neutral     { background: linear-gradient(135deg,#636e72,#b2bec3); color:#fff; }
   .grade-down        { background: linear-gradient(135deg,#74b9ff,#0984e3); color:#fff; }
   .grade-strong-down { background: linear-gradient(135deg,#6c5ce7,#a29bfe); color:#fff; }
-  .indicator-bar-pos { background: linear-gradient(90deg,#ff6b6b,#fab1a0); border-radius:4px; height:8px; transition: width 0.8s; }
-  .indicator-bar-neg { background: linear-gradient(90deg,#74b9ff,#a29bfe); border-radius:4px; height:8px; transition: width 0.8s; }
-  .indicator-bar-neu { background: #dfe6e9; border-radius:4px; height:8px; }
   .reliability-HIGH   { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
   .reliability-MEDIUM { background:#fff8e1; color:#f57f17; border:1px solid #ffe082; }
   .reliability-LOW    { background:#fce4ec; color:#c62828; border:1px solid #f48fb1; }
-  /* ── 다크모드 ── */
-  body.dark { background: linear-gradient(135deg,#1a1a2e 0%,#16213e 100%); color:#e0e0e0; }
-  body.dark .card { background:#1e2235; border-color:#2d3555; box-shadow:0 2px 12px rgba(0,0,0,0.3); }
+  /* ── 다크모드 (개선된 대비) ── */
+  body.dark { background: linear-gradient(135deg,#1a1a2e 0%,#16213e 100%); color:#f0f2fa; }
+  body.dark .card { background:#1e2235; border-color:#3a4268; box-shadow:0 2px 12px rgba(0,0,0,0.3); }
   body.dark .card:hover { box-shadow:0 8px 24px rgba(0,0,0,0.4); }
-  body.dark .text-dark { color:#e0e0e0 !important; }
-  body.dark .text-muted { color:#8892b0 !important; }
-  body.dark .text-light { color:#5a6380 !important; }
-  body.dark .border-divider { border-color:#2d3555 !important; }
+  /* 텍스트 색상 (대비 강화) */
+  body.dark .text-dark  { color:#f5f7fc !important; }   /* 거의 흰색 (주요 텍스트) */
+  body.dark .text-muted { color:#c0c8e0 !important; }   /* 밝은 회색 (부가 텍스트) */
+  body.dark .text-light { color:#8e98b8 !important; }   /* 보조 라벨 (더 밝게) */
+  body.dark .text-accent { color:#b4abff !important; }  /* 강조색 (더 밝게) */
+  body.dark .text-coral  { color:#ff8c9e !important; }  /* 경고/삭제 */
+  body.dark .text-mint   { color:#4dd4ac !important; }  /* 성공/체크 */
+  /* 상승/하락 색상 (다크 배경에서 더 잘 보이게) */
+  body.dark .pos { color:#ff8a8a !important; }
+  body.dark .neg { color:#89c4ff !important; }
+  /* 테두리 & 배경 */
+  body.dark .border-divider { border-color:#3a4268 !important; }
   body.dark .bg-white { background:#1e2235 !important; }
   body.dark .bg-gray-50 { background:#252a3e !important; }
-  body.dark .bg-gray-100 { background:#252a3e !important; }
-  body.dark .hover\:bg-gray-50:hover { background:#252a3e !important; }
-  body.dark .hover\:bg-gray-50\/50:hover { background:#252a3e88 !important; }
-  body.dark input, body.dark select, body.dark textarea { background:#252a3e !important; color:#e0e0e0 !important; border-color:#2d3555 !important; }
-  body.dark .loading { background: linear-gradient(90deg,#252a3e 25%,#2d3555 50%,#252a3e 75%); background-size:200% 100%; }
-  body.dark .tab-btn { color:#8892b0 !important; }
-  body.dark .tab-btn.active { color:#a29bfe !important; border-bottom-color:#a29bfe !important; }
-  body.dark .news-item:hover { background:#252a3e !important; }
-  body.dark .divide-divider > * + * { border-color:#2d3555 !important; }
-  body.dark .modal-overlay { background:rgba(0,0,0,0.6) !important; }
+  body.dark .bg-gray-100 { background:#2a3050 !important; }
+  body.dark .bg-gray-200 { background:#353c5e !important; }
+  body.dark .hover\:bg-gray-50:hover { background:#2a3050 !important; }
+  body.dark .hover\:bg-gray-50\/50:hover { background:#2a305088 !important; }
+  body.dark .hover\:bg-gray-100:hover { background:#353c5e !important; }
+  /* 입력 필드 */
+  body.dark input, body.dark select, body.dark textarea {
+    background:#252a3e !important; color:#f5f7fc !important; border-color:#3a4268 !important;
+  }
+  body.dark input::placeholder, body.dark textarea::placeholder { color:#8e98b8 !important; }
+  body.dark input:focus, body.dark select:focus, body.dark textarea:focus {
+    border-color:#a29bfe !important; box-shadow:0 0 0 2px rgba(162,155,254,0.2) !important;
+  }
+  /* 로딩/탭/드롭다운 */
+  body.dark .loading { background: linear-gradient(90deg,#252a3e 25%,#3a4268 50%,#252a3e 75%); background-size:200% 100%; }
+  body.dark .tab-btn { color:#c0c8e0 !important; }
+  body.dark .tab-btn.active { color:#b4abff !important; border-bottom-color:#b4abff !important; }
+  body.dark .tab-btn:hover { color:#f5f7fc !important; }
+  body.dark .news-item:hover { background:#2a3050 !important; }
+  body.dark .divide-divider > * + * { border-color:#3a4268 !important; }
+  body.dark .modal-overlay { background:rgba(0,0,0,0.7) !important; }
+  body.dark #header-search-dropdown { background:#1e2235 !important; border-color:#3a4268 !important; }
+  body.dark #header-search-dropdown .hover\:bg-gray-50:hover { background:#2a3050 !important; }
   body.dark [class*="modal"] .bg-white { background:#1e2235 !important; }
-  body.dark .upload-zone { border-color:#2d3555 !important; }
-  body.dark .upload-zone.drag-over { background:#6c5ce720 !important; }
-  body.dark .glass { background:rgba(30,34,53,0.7) !important; }
+  body.dark .upload-zone { border-color:#3a4268 !important; }
+  body.dark .upload-zone.drag-over { background:#6c5ce740 !important; }
+  body.dark .glass { background:rgba(30,34,53,0.8) !important; }
+  /* 버튼 hover / 링크 */
+  body.dark .hover\:text-dark:hover { color:#f5f7fc !important; }
+  body.dark .hover\:text-accent:hover { color:#b4abff !important; }
+  body.dark .hover\:text-coral:hover { color:#ff8c9e !important; }
+  body.dark a { color:inherit; }
+  /* 알림/배지 (라이트 파스텔 → 다크 버전) */
+  body.dark .reliability-HIGH   { background:#1a3a1f !important; color:#6dd47a !important; border-color:#2d5e38 !important; }
+  body.dark .reliability-MEDIUM { background:#3a2f10 !important; color:#fdd977 !important; border-color:#5c4a1a !important; }
+  body.dark .reliability-LOW    { background:#3a1a2d !important; color:#ff9cb0 !important; border-color:#6b2d48 !important; }
+  /* 분석 가이드 카드 (bg-red-50 / bg-blue-50 등) */
+  body.dark .bg-red-50    { background:#3a1a24 !important; color:#ff9cb0 !important; }
+  body.dark .bg-blue-50   { background:#142a45 !important; color:#89c4ff !important; }
+  body.dark .bg-green-50  { background:#133a1f !important; color:#6dd47a !important; }
+  body.dark .bg-yellow-50 { background:#3a2f10 !important; color:#fdd977 !important; }
+  body.dark .bg-purple-50 { background:#241a3d !important; color:#b4abff !important; }
+  body.dark .bg-indigo-50 { background:#1a1f40 !important; color:#aab2ff !important; }
+  body.dark .bg-pink-50   { background:#3a1a2d !important; color:#ff9cb0 !important; }
+  body.dark .bg-orange-50 { background:#3a2415 !important; color:#ffb088 !important; }
+  /* tailwind text 색상 */
+  body.dark .text-red-700, body.dark .text-red-600, body.dark .text-red-500 { color:#ff9cb0 !important; }
+  body.dark .text-blue-700, body.dark .text-blue-600, body.dark .text-blue-500 { color:#89c4ff !important; }
+  body.dark .text-green-700, body.dark .text-green-600, body.dark .text-green-500 { color:#6dd47a !important; }
+  body.dark .text-yellow-700, body.dark .text-yellow-600 { color:#fdd977 !important; }
+  body.dark .text-purple-700, body.dark .text-purple-600 { color:#b4abff !important; }
+  body.dark .text-gray-700, body.dark .text-gray-600, body.dark .text-gray-500 { color:#c0c8e0 !important; }
+  body.dark .text-gray-400, body.dark .text-gray-300 { color:#8e98b8 !important; }
+  /* 인라인 style의 #636e72 (회색 텍스트) 다크모드 override 힘듦 → 개별 요소 처리 */
+  body.dark [style*="color:#636e72"],
+  body.dark [style*="color:#2d3436"],
+  body.dark [style*="color:#b2bec3"] { color:#c0c8e0 !important; }
+  /* 스크롤바 다크 톤 */
+  body.dark ::-webkit-scrollbar-track { background:#1a1a2e; }
+  body.dark ::-webkit-scrollbar-thumb { background:#3a4268; border-radius:4px; }
+  body.dark ::-webkit-scrollbar-thumb:hover { background:#4d5782; }
+  /* 체크박스 / 라디오 */
+  body.dark input[type="checkbox"], body.dark input[type="radio"] { accent-color:#a29bfe; }
+  /* code/pre */
+  body.dark code, body.dark pre { background:#252a3e !important; color:#f5f7fc !important; }
   #dark-toggle { cursor:pointer; }
 </style>
 </head>
@@ -107,12 +162,49 @@ tailwind.config = {
     <div>
       <div class="flex items-center gap-3">
         <h1 class="text-3xl font-bold gradient-text">내 주식 대시보드</h1>
-        <span class="text-xs font-bold px-2.5 py-1 rounded-full text-white"
-          style="background:linear-gradient(135deg,#6c5ce7,#a29bfe)">v1.0 Beta</span>
+        <span id="app-version-badge" class="text-xs font-bold px-2.5 py-1 rounded-full text-white"
+          style="background:linear-gradient(135deg,#6c5ce7,#a29bfe)">v1.4.1</span>
+        <button id="update-badge" onclick="openUpdateModal()"
+          class="hidden text-xs font-bold px-2.5 py-1 rounded-full text-white cursor-pointer hover:scale-105 transition animate-pulse"
+          style="background:linear-gradient(135deg,#00b894,#55efc4)" title="클릭하여 업데이트">
+          <span id="update-badge-text">🔔 업데이트!</span>
+        </button>
       </div>
-      <p class="text-sm text-muted mt-1" id="update-time">불러오는 중...</p>
+      <p class="text-sm text-muted mt-1 flex items-center gap-2 flex-wrap">
+        <span id="update-time">불러오는 중...</span>
+        <span id="market-status-badges" class="inline-flex items-center gap-1.5"></span>
+      </p>
     </div>
     <div class="flex gap-2 items-center flex-wrap">
+
+      <!-- 검색바 (타이머 왼쪽) -->
+      <div class="relative" id="header-search-wrap">
+        <div class="flex items-center bg-white border border-divider rounded-xl overflow-hidden">
+          <input id="header-search-input" type="text" placeholder="종목 검색..."
+            class="px-3 py-2 text-xs w-40 bg-transparent border-none outline-none text-dark placeholder:text-light"
+            onkeydown="if(event.key==='Enter') headerQuickSearch()"
+            oninput="headerSearchDebounce()"
+            onfocus="showHeaderResults()"
+            autocomplete="off">
+          <button onclick="headerQuickSearch()" title="검색"
+            class="px-2.5 py-2 hover:bg-gray-50 transition text-muted hover:text-accent">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </button>
+        </div>
+        <!-- 드롭다운 검색 결과 -->
+        <div id="header-search-dropdown" class="hidden absolute top-full left-0 mt-1 w-[420px] max-h-[75vh] overflow-y-auto bg-white border border-divider rounded-2xl shadow-2xl z-50" style="right:auto">
+          <!-- 시장 필터 -->
+          <div class="flex gap-1 p-2 border-b border-divider sticky top-0 bg-white z-10">
+            <button onclick="setHeaderSearchMarket('all')" id="hsm-all"
+              class="flex-1 text-xs px-2 py-1 rounded-lg font-bold bg-accent text-white">전체</button>
+            <button onclick="setHeaderSearchMarket('kr')" id="hsm-kr"
+              class="flex-1 text-xs px-2 py-1 rounded-lg font-medium text-muted hover:bg-gray-100">🇰🇷 국내</button>
+            <button onclick="setHeaderSearchMarket('us')" id="hsm-us"
+              class="flex-1 text-xs px-2 py-1 rounded-lg font-medium text-muted hover:bg-gray-100">🇺🇸 해외</button>
+          </div>
+          <div id="header-search-results" class="p-2"></div>
+        </div>
+      </div>
 
       <!-- 자동 새로고침 (컴팩트) -->
       <div class="flex items-center gap-1.5 bg-white border border-divider rounded-xl px-3 py-2 text-xs text-muted">
@@ -193,7 +285,8 @@ tailwind.config = {
       <button class="tab-btn" id="tab-period" onclick="switchTab('period')">📈 기간별</button>
       <button class="tab-btn" id="tab-tx" onclick="switchTab('tx')">🔄 거래내역</button>
       <button class="tab-btn" id="tab-news" onclick="switchTab('news')">📰 뉴스</button>
-      <button class="tab-btn" id="tab-search" onclick="switchTab('search')">🔍 검색</button>
+      <button class="tab-btn" id="tab-sim" onclick="switchTab('sim')">🎮 모의투자</button>
+      <button class="tab-btn" id="tab-search" onclick="switchTab('search')" style="display:none">🔍 검색</button>
       <button class="tab-btn" id="tab-stockcompare" onclick="switchTab('stockcompare')">⚖️ 종목비교</button>
       <button class="tab-btn" id="tab-tools" onclick="switchTab('tools')">🛠 도구</button>
     </div>
@@ -221,6 +314,29 @@ tailwind.config = {
 
     <!-- Tab: Portfolio -->
     <div id="pane-portfolio" class="space-y-4">
+
+    <!-- 종목 검색/추가 패널 (접이식) -->
+    <div id="search-panel" class="hidden">
+      <div class="card p-4">
+        <div class="flex items-center gap-2 mb-3">
+          <h3 class="text-sm font-bold text-dark flex items-center gap-1.5">🔍 종목 검색 / 추가</h3>
+          <div class="flex gap-1 bg-gray-100 rounded-lg p-0.5 ml-auto">
+            <button id="sp-market-all" onclick="setSearchMarket('all')" class="px-2 py-1 text-xs font-bold rounded-md bg-white text-accent shadow-sm">전체</button>
+            <button id="sp-market-kr" onclick="setSearchMarket('kr')" class="px-2 py-1 text-xs font-bold rounded-md text-muted hover:text-dark">🇰🇷</button>
+            <button id="sp-market-us" onclick="setSearchMarket('us')" class="px-2 py-1 text-xs font-bold rounded-md text-muted hover:text-dark">🇺🇸</button>
+          </div>
+          <button onclick="toggleSearchPanel()" class="text-muted hover:text-dark text-lg ml-1">✕</button>
+        </div>
+        <div class="flex gap-2 mb-3">
+          <input id="sp-search-input" type="text" placeholder="종목명, 티커, 분야 검색 (예: 삼성전자, NVDA, 반도체)"
+            class="flex-1 border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent"
+            onkeydown="if(event.key==='Enter') doSearchPanel()">
+          <button onclick="doSearchPanel()" class="btn-primary px-5 py-2.5 text-sm">검색</button>
+        </div>
+        <div id="sp-search-results" class="space-y-3 max-h-[50vh] overflow-y-auto"></div>
+      </div>
+    </div>
+
     <!-- Summary -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="card stat-card p-5">
@@ -245,20 +361,25 @@ tailwind.config = {
     <div class="card p-5">
       <h2 class="text-lg font-bold text-dark mb-4 flex items-center gap-2">
         <span class="w-1.5 h-5 bg-accent rounded-full"></span>내 포트폴리오
+        <button onclick="openManualAddModal()" title="종목 수동 추가"
+          class="ml-auto flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg bg-accent text-white hover:opacity-90 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          종목 추가
+        </button>
       </h2>
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
           <thead>
-            <tr class="text-muted text-xs border-b border-divider">
-              <th class="text-left py-3 px-3 font-medium">종목명</th>
-              <th class="text-right py-3 px-2 font-medium">수량</th>
-              <th class="text-right py-3 px-2 font-medium">평균매수가</th>
-              <th class="text-right py-3 px-2 font-medium">현재가</th>
-              <th class="text-right py-3 px-2 font-medium">평가금액</th>
-              <th class="text-right py-3 px-2 font-medium">손익</th>
+            <tr class="text-muted text-xs border-b border-divider select-none">
+              <th class="text-left py-3 px-3 font-medium cursor-pointer hover:text-accent transition" onclick="sortPortfolio('name')">종목명 <span id="sort-name" class="text-light"></span></th>
+              <th class="text-right py-3 px-2 font-medium cursor-pointer hover:text-accent transition" onclick="sortPortfolio('qty')">수량 <span id="sort-qty" class="text-light"></span></th>
+              <th class="text-right py-3 px-2 font-medium cursor-pointer hover:text-accent transition" onclick="sortPortfolio('avg_price')">평균매수가 <span id="sort-avg_price" class="text-light"></span></th>
+              <th class="text-right py-3 px-2 font-medium cursor-pointer hover:text-accent transition" onclick="sortPortfolio('current_price')">현재가 <span id="sort-current_price" class="text-light"></span></th>
+              <th class="text-right py-3 px-2 font-medium cursor-pointer hover:text-accent transition" onclick="sortPortfolio('current_value')">평가금액 <span id="sort-current_value" class="text-light">▼</span></th>
+              <th class="text-right py-3 px-2 font-medium cursor-pointer hover:text-accent transition" onclick="sortPortfolio('profit')">손익 <span id="sort-profit" class="text-light"></span></th>
               <th class="text-right py-3 px-2 font-medium">목표가</th>
               <th class="text-center py-3 px-2 font-medium">메모</th>
-              <th class="text-right py-3 px-3 font-medium">수익률</th>
+              <th class="text-right py-3 px-3 font-medium cursor-pointer hover:text-accent transition" onclick="sortPortfolio('profit_pct')">수익률 <span id="sort-profit_pct" class="text-light"></span></th>
               <th class="py-3 px-2 font-medium text-center w-8"></th>
             </tr>
           </thead>
@@ -738,10 +859,33 @@ tailwind.config = {
         </div><!-- /algo-dict-body -->
       </div><!-- /알고리즘 사전 card -->
 
+      <!-- 알고리즘 설정 -->
+      <div class="card rounded-2xl overflow-hidden mx-1">
+        <div class="flex items-center justify-between px-4 py-3 cursor-pointer select-none"
+             style="background:linear-gradient(135deg,#00b894,#00cec9)"
+             onclick="document.getElementById('algo-settings-body').classList.toggle('hidden');document.getElementById('algo-settings-arrow').classList.toggle('rotate-180')">
+          <div class="flex items-center gap-2 text-white">
+            <span class="text-xl">⚙️</span>
+            <span class="font-bold text-base">알고리즘 설정</span>
+            <span class="text-xs opacity-80 ml-1">— 사용할 알고리즘을 선택하세요</span>
+          </div>
+          <span id="algo-settings-arrow" class="text-white text-lg transition-transform duration-200">▼</span>
+        </div>
+        <div id="algo-settings-body" class="hidden px-4 pb-4 pt-3 space-y-3">
+          <p class="text-xs text-muted">활성화할 알고리즘을 선택하세요. 많이 선택할수록 분석이 오래 걸릴 수 있습니다.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="algo-toggle-list"></div>
+          <div class="flex gap-2 pt-2">
+            <button onclick="toggleAllAlgos(true)" class="text-xs px-3 py-1.5 rounded-lg border border-divider text-muted hover:text-dark hover:border-accent transition">전체 선택</button>
+            <button onclick="toggleAllAlgos(false)" class="text-xs px-3 py-1.5 rounded-lg border border-divider text-muted hover:text-dark hover:border-accent transition">전체 해제</button>
+            <button onclick="applyAlgoSettings()" class="btn-primary text-xs px-4 py-1.5 ml-auto">적용 후 다시 분석</button>
+          </div>
+        </div>
+      </div>
+
       <div id="compare-body" class="space-y-6">
         <div class="card p-8 text-center text-muted loading rounded-xl">알고리즘 비교 불러오는 중...</div>
       </div>
-      <p class="text-xs text-muted text-center px-4 pb-2">※ 4개 알고리즘의 신호가 일치할수록 신뢰도가 높습니다. 투자 조언이 아닙니다.</p>
+      <p class="text-xs text-muted text-center px-4 pb-2">※ 선택한 알고리즘의 신호가 일치할수록 신뢰도가 높습니다. 투자 조언이 아닙니다.</p>
 
     </div>
 
@@ -755,7 +899,7 @@ tailwind.config = {
       </div>
       <!-- 종목 카드 목록 -->
       <div id="simple-cards" class="space-y-3"></div>
-      <p class="text-xs text-muted text-center pt-1">💡 실시간 시장가 기준이라 토스 앱과 약간 다를 수 있어요</p>
+      <p class="text-xs text-muted text-center pt-1">💡 실시간 시장가 기준이며 실제 증권사 앱과 다소 차이가 있을 수 있어요</p>
     </div>
 
     <!-- Tab: 거래내역 -->
@@ -843,23 +987,59 @@ tailwind.config = {
 
     <!-- Tab: 뉴스 -->
     <div id="pane-news" class="hidden p-4 space-y-4">
-      <!-- 🔔 뉴스 구독 알림 -->
+      <!-- 🔎🔔 통합 검색 + 구독 카드 -->
       <div class="card p-4">
         <div class="flex items-center justify-between mb-3">
-          <h3 class="text-sm font-bold text-dark flex items-center gap-2">🔔 뉴스 구독 알림</h3>
-          <button onclick="toggleNewsNotify()" id="news-notify-btn"
-            class="text-xs px-2.5 py-1 rounded-full border transition font-medium"
-            style="border-color:#b2bec3;color:#b2bec3">🔕 알림 OFF</button>
+          <h3 class="text-sm font-bold text-dark flex items-center gap-2">🔎 뉴스 검색 & 구독</h3>
+          <div class="flex items-center gap-1">
+            <select id="news-search-sort" class="text-xs px-2 py-1 rounded-full border border-divider focus:outline-none focus:border-accent bg-white">
+              <option value="latest">최신순</option>
+              <option value="relevance">관련도순</option>
+            </select>
+            <select id="news-search-lang" class="text-xs px-2 py-1 rounded-full border border-divider focus:outline-none focus:border-accent bg-white">
+              <option value="ko">🇰🇷 한국어</option>
+              <option value="en">🇺🇸 영어</option>
+            </select>
+            <button onclick="toggleNewsNotify()" id="news-notify-btn"
+              class="text-xs px-2.5 py-1 rounded-full border transition font-medium ml-1"
+              style="border-color:#b2bec3;color:#b2bec3">🔕 알림 OFF</button>
+          </div>
         </div>
+
+        <!-- 통합 입력 + 검색/추가 버튼 동시 -->
         <div class="flex gap-2 mb-3">
-          <input id="news-sub-input" type="text" placeholder="구독할 종목명·티커·분야 (예: 삼성전자, NVDA, 반도체)"
+          <input id="news-unified-input" type="text" placeholder="키워드 입력 (예: 삼성전자, 금리인상, NVDA, 반도체...)"
             class="flex-1 border border-divider rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-accent"
-            onkeydown="if(event.key==='Enter') addNewsSub()">
-          <button onclick="addNewsSub()" class="text-xs px-3 py-1.5 bg-accent text-white rounded-xl hover:opacity-90 transition">+ 추가</button>
+            onkeydown="if(event.key==='Enter') runNewsSearchFromUnified()">
+          <button onclick="runNewsSearchFromUnified()" class="text-xs px-3 py-1.5 bg-accent text-white rounded-xl hover:opacity-90 transition font-semibold">🔎 검색</button>
+          <button onclick="addNewsSubFromUnified()" class="text-xs px-3 py-1.5 bg-mint text-white rounded-xl hover:opacity-90 transition font-semibold">+ 구독</button>
         </div>
-        <div id="news-subs-list" class="flex flex-wrap gap-1.5 min-h-[28px]">
-          <span class="text-xs text-muted">구독 중인 키워드 없음</span>
+
+        <!-- 빠른 검색 칩 -->
+        <div class="mb-3">
+          <p class="text-xs text-muted mb-1.5">⚡ 빠른 검색</p>
+          <div id="news-quick-chips" class="flex flex-wrap gap-1.5">
+            <button onclick="setNewsSearch('금리')"   class="text-xs px-2.5 py-1 rounded-full border border-divider text-muted hover:bg-accent hover:text-white hover:border-accent transition">금리</button>
+            <button onclick="setNewsSearch('환율')"   class="text-xs px-2.5 py-1 rounded-full border border-divider text-muted hover:bg-accent hover:text-white hover:border-accent transition">환율</button>
+            <button onclick="setNewsSearch('반도체')" class="text-xs px-2.5 py-1 rounded-full border border-divider text-muted hover:bg-accent hover:text-white hover:border-accent transition">반도체</button>
+            <button onclick="setNewsSearch('AI')"     class="text-xs px-2.5 py-1 rounded-full border border-divider text-muted hover:bg-accent hover:text-white hover:border-accent transition">AI</button>
+            <button onclick="setNewsSearch('실적발표')" class="text-xs px-2.5 py-1 rounded-full border border-divider text-muted hover:bg-accent hover:text-white hover:border-accent transition">실적발표</button>
+            <button onclick="setNewsSearch('연준')"   class="text-xs px-2.5 py-1 rounded-full border border-divider text-muted hover:bg-accent hover:text-white hover:border-accent transition">연준</button>
+            <button onclick="setNewsSearch('코스피')" class="text-xs px-2.5 py-1 rounded-full border border-divider text-muted hover:bg-accent hover:text-white hover:border-accent transition">코스피</button>
+            <button onclick="setNewsSearch('나스닥')" class="text-xs px-2.5 py-1 rounded-full border border-divider text-muted hover:bg-accent hover:text-white hover:border-accent transition">나스닥</button>
+          </div>
         </div>
+
+        <!-- 구독 중인 키워드 -->
+        <div>
+          <p class="text-xs text-muted mb-1.5">🔔 구독 중 <span id="news-subs-count" class="text-dark font-semibold"></span></p>
+          <div id="news-subs-list" class="flex flex-wrap gap-1.5 min-h-[28px]">
+            <span class="text-xs text-muted">구독 중인 키워드 없음 — 입력 후 <b>+ 구독</b> 클릭</span>
+          </div>
+        </div>
+
+        <!-- 검색 결과 -->
+        <div id="news-search-results" class="hidden mt-3 pt-3 border-t border-divider space-y-2"></div>
 
         <!-- 알림 내역 -->
         <div class="mt-4 pt-3 border-t border-divider">
@@ -903,6 +1083,117 @@ tailwind.config = {
       <!-- 카테고리별 뉴스 -->
       <div id="news-categories" class="space-y-4">
         <div class="card p-8 text-center text-muted">뉴스 불러오는 중...</div>
+      </div>
+    </div>
+
+    <!-- Tab: 모의투자 -->
+    <div id="pane-sim" class="hidden p-4 space-y-4">
+      <!-- 요약 카드 -->
+      <div id="sim-summary" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="card p-4">
+          <p class="text-xs text-muted mb-1">💵 모의 투자금</p>
+          <p id="sim-total-cost" class="text-base font-bold text-dark">0원</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-muted mb-1">📊 평가금액</p>
+          <p id="sim-total-value" class="text-base font-bold text-dark">0원</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-muted mb-1">💰 평가손익</p>
+          <p id="sim-total-pnl" class="text-base font-bold">0원</p>
+        </div>
+        <div class="card p-4">
+          <p class="text-xs text-muted mb-1">📈 수익률</p>
+          <p id="sim-total-pct" class="text-base font-bold">0.00%</p>
+        </div>
+      </div>
+
+      <!-- 위시리스트에서 빠른 매수 -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold text-dark flex items-center gap-2">
+            ⭐ 위시리스트에서 모의 매수
+          </h3>
+          <button onclick="loadSimulation()" class="text-xs text-accent hover:underline">↻ 새로고침</button>
+        </div>
+        <div id="sim-wishlist-chips" class="flex flex-wrap gap-2">
+          <p class="text-xs text-muted">로딩 중...</p>
+        </div>
+      </div>
+
+      <!-- 모의 매수 목록 -->
+      <div class="card overflow-hidden">
+        <div class="px-5 py-3 border-b border-divider flex items-center justify-between">
+          <h3 class="text-sm font-bold text-dark flex items-center gap-2">
+            🎮 내 모의 포트폴리오 <span id="sim-count" class="text-xs text-muted font-normal">(0건)</span>
+          </h3>
+          <div class="flex items-center gap-2">
+            <span id="sim-best" class="text-xs text-muted hidden"></span>
+            <button onclick="simClearAll()" class="text-xs text-coral hover:underline">전체 초기화</button>
+          </div>
+        </div>
+        <div id="sim-list" class="divide-y divide-divider">
+          <p class="px-5 py-8 text-xs text-muted text-center">모의 매수 기록이 없습니다</p>
+        </div>
+      </div>
+
+      <!-- 안내 -->
+      <div class="text-xs text-muted px-2">
+        💡 모의 투자는 <b class="text-accent">실제 거래가 아닙니다</b>. 관심 종목의 가상 매수 시 손익을 추적해볼 수 있습니다.
+      </div>
+    </div>
+
+    <!-- 모의 매수 모달 -->
+    <div id="sim-buy-modal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center hidden" onclick="closeSimBuyModal()">
+      <div class="card p-6 w-full max-w-md mx-4" onclick="event.stopPropagation()">
+        <h3 class="text-base font-bold text-dark mb-4 flex items-center gap-2">
+          🎮 모의 매수
+        </h3>
+        <div class="rounded-xl border border-accent p-3 mb-3" style="background:linear-gradient(135deg,#6c5ce715,#a29bfe15)">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-base font-bold text-dark" id="sim-buy-name">-</p>
+              <p class="text-xs text-muted"><span id="sim-buy-ticker">-</span> · <span id="sim-buy-market">-</span></p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-muted">현재가</p>
+              <p class="text-sm font-bold text-dark" id="sim-buy-cur">-</p>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs text-muted block mb-1.5">수량 <span class="text-coral">*</span></label>
+            <input id="sim-buy-qty" type="number" step="any" min="0" placeholder="예: 10"
+              class="w-full border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent">
+          </div>
+          <div>
+            <label class="text-xs text-muted block mb-1.5 flex items-center justify-between">
+              <span>매수 단가 <span class="text-coral">*</span></span>
+              <button type="button" onclick="simUseCurrentPrice()" class="text-xs text-accent hover:underline font-semibold">현재가로</button>
+            </label>
+            <input id="sim-buy-price" type="number" step="any" min="0" placeholder="원"
+              class="w-full border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent">
+          </div>
+          <div>
+            <label class="text-xs text-muted block mb-1.5">매수일</label>
+            <input id="sim-buy-date" type="date"
+              class="w-full border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent">
+          </div>
+          <div>
+            <label class="text-xs text-muted block mb-1.5">메모 <span class="text-light">(선택)</span></label>
+            <input id="sim-buy-note" type="text" maxlength="100" placeholder="예: 실적 발표 전 매수 가정"
+              class="w-full border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent">
+          </div>
+          <div class="rounded-xl bg-gray-50 p-3 flex items-center justify-between">
+            <span class="text-xs text-muted">예상 투자금액</span>
+            <span id="sim-buy-total" class="text-sm font-bold text-dark">0원</span>
+          </div>
+        </div>
+        <div class="flex gap-2 mt-4">
+          <button onclick="closeSimBuyModal()" class="flex-1 py-2.5 text-sm font-medium text-muted border border-divider rounded-xl hover:bg-gray-50 transition">취소</button>
+          <button onclick="submitSimBuy()" class="flex-1 btn-primary py-2.5 text-sm">모의 매수</button>
+        </div>
       </div>
     </div>
 
@@ -975,20 +1266,26 @@ tailwind.config = {
 
     <!-- Tab: 기간별 수익 -->
     <div id="pane-period" class="hidden p-4 space-y-4">
+      <!-- 벤치마크 비교 (상단, 접기/펼치기) -->
+      <div id="benchmark-section" class="hidden card overflow-hidden">
+        <div class="flex items-center justify-between px-5 py-3 cursor-pointer select-none hover:bg-gray-50 transition"
+             onclick="toggleBenchmark()">
+          <h3 class="text-base font-bold text-dark flex items-center gap-2">
+            <span class="w-1.5 h-5 bg-sky rounded-full"></span>벤치마크 비교
+          </h3>
+          <div class="flex items-center gap-2">
+            <button onclick="event.stopPropagation();loadBenchmark(true)" class="text-xs text-accent hover:underline">↻ 새로고침</button>
+            <span id="benchmark-arrow" class="text-muted text-sm transition-transform duration-200">▼</span>
+          </div>
+        </div>
+        <div id="benchmark-body" class="px-5 pb-5 space-y-3">
+          <p class="text-sm text-muted text-center py-4">불러오는 중...</p>
+        </div>
+      </div>
       <div id="period-loading" class="card p-8 text-center text-muted">
         📊 기간별 데이터 불러오는 중...
       </div>
       <div id="period-body" class="hidden space-y-4"></div>
-      <!-- 벤치마크 비교 -->
-      <div id="benchmark-section" class="hidden card p-5">
-        <h3 class="text-base font-bold text-dark mb-4 flex items-center gap-2">
-          <span class="w-1.5 h-5 bg-sky rounded-full"></span>벤치마크 비교
-          <button onclick="loadBenchmark()" class="ml-auto text-xs text-accent hover:underline">↻ 새로고침</button>
-        </h3>
-        <div id="benchmark-body" class="space-y-3">
-          <p class="text-sm text-muted text-center py-4">불러오는 중...</p>
-        </div>
-      </div>
     </div>
 
     <!-- Tab: 종목 비교 -->
@@ -1185,14 +1482,16 @@ tailwind.config = {
       <button onclick="closeImportModal()" class="text-muted hover:text-dark text-xl leading-none">✕</button>
     </div>
 
-    <!-- 탭 3개 -->
+    <!-- 탭 4개 -->
     <div class="flex bg-gray-100 rounded-xl p-1 mb-5 gap-1">
       <button id="imp-tab-excel" onclick="switchImportTab('excel')"
-        class="flex-1 py-2 text-xs font-bold rounded-lg bg-white text-accent shadow-sm transition">📊 엑셀 업로드</button>
+        class="flex-1 py-2 text-xs font-bold rounded-lg bg-white text-accent shadow-sm transition">📊 엑셀</button>
       <button id="imp-tab-image" onclick="switchImportTab('image')"
-        class="flex-1 py-2 text-xs font-bold rounded-lg text-muted hover:text-dark transition">🖼 이미지 불러오기</button>
+        class="flex-1 py-2 text-xs font-bold rounded-lg text-muted hover:text-dark transition">🖼 이미지</button>
+      <button id="imp-tab-text" onclick="switchImportTab('text')"
+        class="flex-1 py-2 text-xs font-bold rounded-lg text-muted hover:text-dark transition">📋 텍스트</button>
       <button id="imp-tab-test" onclick="switchImportTab('test')"
-        class="flex-1 py-2 text-xs font-bold rounded-lg text-muted hover:text-dark transition">🧪 저장 테스트</button>
+        class="flex-1 py-2 text-xs font-bold rounded-lg text-muted hover:text-dark transition">🧪 테스트</button>
     </div>
 
     <!-- 탭 패널: 엑셀 -->
@@ -1233,6 +1532,33 @@ tailwind.config = {
       <div id="imp-image-result" class="hidden mt-4 space-y-2"></div>
     </div>
 
+    <!-- 탭 패널: 텍스트 붙여넣기 -->
+    <div id="imp-pane-text" class="hidden">
+      <div class="bg-blue-50 rounded-xl p-3 mb-3 text-xs text-blue-800">
+        <p class="font-bold mb-1.5">📋 사용 방법</p>
+        <p class="mb-2">① 아래 AI 서비스에 증권앱 스크린샷을 올리고 "이 이미지의 텍스트를 그대로 복사해줘"라고 요청하세요.</p>
+        <div class="flex flex-wrap gap-2">
+          <a href="https://chatgpt.com" target="_blank"
+            class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-200 rounded-lg font-semibold text-blue-700 hover:bg-blue-100 transition">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073z"/></svg>
+            ChatGPT
+          </a>
+          <a href="https://claude.ai" target="_blank"
+            class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-200 rounded-lg font-semibold text-blue-700 hover:bg-blue-100 transition">
+            <span class="text-sm">🤖</span> Claude
+          </a>
+          <a href="https://gemini.google.com" target="_blank"
+            class="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-200 rounded-lg font-semibold text-blue-700 hover:bg-blue-100 transition">
+            <span class="text-sm">✦</span> Gemini
+          </a>
+        </div>
+        <p class="mt-2">② AI가 추출한 텍스트를 아래에 붙여넣고 <b>분석하기</b>를 누르세요.</p>
+      </div>
+      <textarea id="imp-text-input" rows="8" placeholder="종목&#9;보유 수량&#9;평가금액&#9;변동액&#9;변동률&#10;마이크로소프트&#9;0.03213주&#9;17,553원&#9;+1,172원&#9;7.1%&#10;..." class="w-full text-xs border border-divider rounded-xl p-3 font-mono focus:outline-none focus:border-accent resize-none"></textarea>
+      <button onclick="parseImportTextInput()" class="w-full btn-primary py-2.5 text-sm mt-3">불러오기</button>
+      <div id="imp-text-result" class="hidden mt-3 p-3 rounded-xl text-xs bg-gray-50"></div>
+    </div>
+
     <!-- 탭 패널: 저장 테스트 -->
     <div id="imp-pane-test" class="hidden">
       <p class="text-xs text-muted mb-4">데이터가 서버에 정상적으로 저장되고 불러와지는지 테스트합니다.</p>
@@ -1249,38 +1575,7 @@ tailwind.config = {
   </div>
 </div>
 
-<!-- Upload Modal -->
-<div id="upload-modal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center hidden">
-  <div class="card p-6 w-full max-w-lg mx-4" onclick="event.stopPropagation()">
-    <div class="flex justify-between items-center mb-5">
-      <h3 class="text-lg font-bold text-dark">엑셀로 포트폴리오 업로드</h3>
-      <button onclick="closeUploadModal()" class="text-muted hover:text-dark transition text-xl">&times;</button>
-    </div>
-
-    <div id="upload-zone" class="upload-zone p-8 text-center cursor-pointer mb-4"
-         onclick="document.getElementById('file-input').click()"
-         ondragover="event.preventDefault(); this.classList.add('drag-over')"
-         ondragleave="this.classList.remove('drag-over')"
-         ondrop="handleDrop(event)">
-      <svg class="w-10 h-10 mx-auto mb-3 text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-      </svg>
-      <p class="text-dark font-medium mb-1">엑셀 파일을 드래그하거나 클릭하세요</p>
-      <p class="text-xs text-muted">.xlsx 파일 지원</p>
-      <input type="file" id="file-input" accept=".xlsx,.xls" class="hidden" onchange="handleFileSelect(this)">
-    </div>
-
-    <div id="upload-status" class="hidden mb-4 p-4 rounded-xl text-sm"></div>
-
-    <div class="flex items-center justify-between">
-      <a href="/api/template" class="text-sm text-accent hover:underline flex items-center gap-1">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-        템플릿 다운로드
-      </a>
-      <p class="text-xs text-muted">열: 종목명, 종목코드, 시장, 수량, 매수금액</p>
-    </div>
-  </div>
-</div>
+<!-- (구 Upload Modal 제거 — import-modal로 통합됨) -->
 
 <!-- Screenshot Modal -->
 <div id="screenshot-modal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center hidden">
@@ -1322,7 +1617,7 @@ tailwind.config = {
         <p class="mt-2">② AI가 추출한 텍스트를 아래에 붙여넣고 <b>분석하기</b>를 누르세요.</p>
       </div>
       <textarea id="ss-text-input" rows="8" placeholder="종목	보유 수량	평가금액	변동액	변동률&#10;마이크로소프트	0.03213주	17,553원	+1,172원	7.1%&#10;..." class="w-full text-xs border border-divider rounded-xl p-3 font-mono focus:outline-none focus:border-accent resize-none"></textarea>
-      <button onclick="parseTextInput()" class="w-full btn-primary py-2.5 text-sm mt-3">분석하기</button>
+      <button onclick="parseTextInput()" class="w-full btn-primary py-2.5 text-sm mt-3">불러오기</button>
     </div>
 
     <!-- 이미지 OCR 탭 -->
@@ -1419,25 +1714,76 @@ tailwind.config = {
         <p class="text-sm font-semibold text-dark break-all" id="df-data-dir">불러오는 중...</p>
       </div>
 
-      <!-- 내 접속 코드 (토큰) -->
-      <div class="rounded-xl border-2 border-accent p-3" style="background:#f5f3ff">
+      <!-- 앱 업데이트 -->
+      <div class="rounded-xl border border-divider p-3">
         <div class="flex items-center justify-between mb-2">
-          <p class="text-xs font-bold text-accent">🔑 내 접속 코드</p>
-          <span class="text-xs text-muted">다른 기기에서 같은 데이터 접속 시 사용</span>
+          <p class="text-xs font-bold text-dark">🚀 앱 업데이트</p>
+          <span id="df-version-badge" class="text-xs text-muted">-</span>
         </div>
-        <div class="flex gap-2">
-          <code class="flex-1 text-xs bg-white border border-divider rounded-lg px-2 py-2 font-mono text-dark truncate" id="df-token">-</code>
-          <button onclick="copyToken()" class="shrink-0 px-3 py-2 text-xs btn-primary rounded-lg">복사</button>
+        <div class="flex gap-2 mb-2">
+          <button onclick="forceUpdateCheck()" class="flex-1 text-xs px-3 py-2 bg-accent text-white rounded-lg hover:opacity-90 transition font-semibold">
+            🔄 업데이트 확인
+          </button>
+          <button onclick="openUpdateModal()" class="flex-1 text-xs px-3 py-2 border border-accent text-accent rounded-lg hover:bg-purple-50 transition font-semibold">
+            📋 릴리즈 노트
+          </button>
         </div>
-        <!-- 토큰 입력 (다른 기기 → 내 데이터 접속) -->
-        <details class="mt-2">
-          <summary class="text-xs text-accent cursor-pointer select-none font-semibold">▶ 다른 기기 코드 입력하기</summary>
-          <div class="mt-2 flex gap-2">
-            <input id="df-token-input" type="text" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-              class="flex-1 text-xs border border-divider rounded-lg px-2 py-2 font-mono focus:outline-none focus:border-accent">
-            <button onclick="applyToken()" class="shrink-0 px-3 py-2 text-xs bg-mint text-white rounded-lg font-bold">적용</button>
+        <!-- 진단 정보 -->
+        <details class="text-xs">
+          <summary class="cursor-pointer text-muted hover:text-accent">▼ 진단 정보 (자동 업데이트 안 될 때)</summary>
+          <div id="upd-diagnostic" class="mt-2 p-2 bg-gray-50 rounded-lg font-mono text-xs leading-relaxed">로딩 중...</div>
+          <button onclick="resetUpdateState()" class="mt-2 text-xs text-coral hover:underline">⚠️ 캐시·스킵 정보 초기화</button>
+        </details>
+      </div>
+
+      <!-- 데이터 내보내기 -->
+      <div class="rounded-xl border border-divider p-3">
+        <p class="text-xs font-bold text-dark mb-2">📥 데이터 내보내기</p>
+        <a href="/api/export/excel" download
+          class="block w-full text-center text-xs px-3 py-2 bg-mint text-white rounded-lg hover:opacity-90 transition font-semibold">
+          📊 Excel로 다운로드
+        </a>
+        <p class="text-xs text-muted mt-1.5">포트폴리오·거래내역·위시리스트·모의투자 4개 시트 포함</p>
+      </div>
+
+      <!-- 크로스 디바이스 동기화 -->
+      <div id="sync-panel" class="rounded-xl border-2 border-accent p-3" style="background:#f5f3ff">
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-xs font-bold text-accent">🔗 크로스 디바이스 동기화</p>
+          <span id="sync-status-badge" class="text-xs px-2 py-0.5 rounded-full bg-gray-200 text-muted">확인 중...</span>
+        </div>
+
+        <!-- 내 접속코드 표시 / 생성 -->
+        <div id="sync-code-area" class="mb-3">
+          <div id="sync-no-code" class="">
+            <p class="text-xs text-muted mb-2">접속코드를 생성하면 다른 기기에서 동일한 데이터에 접근할 수 있습니다.</p>
+            <button onclick="syncGenerateCode()" id="sync-gen-btn" class="w-full py-2 text-xs btn-primary rounded-lg font-bold">
+              📤 접속코드 생성 (업로드)
+            </button>
           </div>
-          <p class="text-xs text-muted mt-1">적용 후 페이지가 새로고침되며 해당 코드의 데이터로 전환됩니다.</p>
+          <div id="sync-has-code" class="hidden">
+            <div class="flex gap-2 items-center mb-2">
+              <code id="sync-my-code" class="flex-1 text-center text-lg font-bold tracking-[0.3em] bg-white border-2 border-accent rounded-lg px-3 py-2 font-mono text-accent select-all">------</code>
+              <button onclick="syncCopyCode()" class="shrink-0 px-3 py-2 text-xs btn-primary rounded-lg">복사</button>
+            </div>
+            <button onclick="syncUploadData()" id="sync-upload-btn" class="w-full py-1.5 text-xs bg-white border border-accent text-accent rounded-lg font-semibold hover:bg-purple-50">
+              🔄 현재 데이터로 업데이트
+            </button>
+          </div>
+        </div>
+
+        <!-- 다른 기기 코드 입력 -->
+        <details class="border-t border-divider pt-2">
+          <summary class="text-xs text-accent cursor-pointer select-none font-semibold">▼ 다른 기기 코드로 불러오기</summary>
+          <div class="mt-2">
+            <div class="flex gap-2">
+              <input id="sync-input-code" type="text" placeholder="접속코드 6자리 (예: AB3K7M)" maxlength="6"
+                class="flex-1 text-center text-sm tracking-[0.2em] uppercase border border-divider rounded-lg px-2 py-2 font-mono font-bold focus:outline-none focus:border-accent"
+                oninput="this.value=this.value.toUpperCase()">
+              <button onclick="syncDownloadData()" id="sync-down-btn" class="shrink-0 px-4 py-2 text-xs bg-mint text-white rounded-lg font-bold">📥 불러오기</button>
+            </div>
+            <p class="text-xs text-muted mt-1">다른 기기에서 생성한 접속코드를 입력하면 해당 데이터를 이 기기로 가져옵니다.</p>
+          </div>
         </details>
       </div>
 
@@ -1464,7 +1810,226 @@ tailwind.config = {
   </div>
 </div>
 
+<!-- 업데이트 알림 모달 -->
+<div id="update-modal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center hidden" onclick="closeUpdateModal()">
+  <div class="card p-6 w-full max-w-lg mx-4" onclick="event.stopPropagation()">
+    <div class="flex items-start gap-3 mb-4">
+      <div class="text-3xl">🚀</div>
+      <div class="flex-1">
+        <h3 class="text-base font-bold text-dark mb-0.5">새 업데이트 가능</h3>
+        <p class="text-xs text-muted">
+          현재: <span id="upd-current" class="font-mono font-semibold">-</span> →
+          최신: <span id="upd-latest" class="font-mono font-bold text-accent">-</span>
+          <span id="upd-mandatory" class="hidden ml-2 text-xs font-bold text-coral">⚠️ 필수 업데이트</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- 릴리즈 노트 -->
+    <div class="rounded-xl bg-gray-50 p-3 mb-4 max-h-60 overflow-y-auto">
+      <p class="text-xs font-bold text-dark mb-1.5">📋 업데이트 내용</p>
+      <div id="upd-notes" class="text-xs text-dark whitespace-pre-wrap leading-relaxed">로딩 중...</div>
+    </div>
+
+    <!-- 진행 상태 -->
+    <div id="upd-progress" class="hidden rounded-xl border border-accent p-3 mb-3" style="background:#f5f3ff">
+      <p class="text-xs font-bold text-accent mb-1">⏳ <span id="upd-progress-msg">준비 중...</span></p>
+      <div class="w-full h-2 bg-white rounded-full overflow-hidden">
+        <div id="upd-progress-bar" class="h-full bg-accent transition-all" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- 액션 버튼 -->
+    <div class="flex gap-2">
+      <button onclick="closeUpdateModal()" id="upd-later-btn"
+        class="flex-1 py-2.5 text-sm font-medium text-muted border border-divider rounded-xl hover:bg-gray-50 transition">
+        나중에
+      </button>
+      <a id="upd-manual-link" href="#" target="_blank"
+        class="px-4 py-2.5 text-sm font-semibold text-accent border border-accent rounded-xl hover:bg-purple-50 transition text-center">
+        수동 다운로드
+      </a>
+      <button onclick="installUpdate()" id="upd-install-btn"
+        class="flex-1 btn-primary py-2.5 text-sm">
+        ⬇️ 지금 업데이트
+      </button>
+    </div>
+    <p class="text-xs text-muted mt-2 text-center">💡 업데이트 시 앱이 종료되고 자동 재시작됩니다</p>
+  </div>
+</div>
+
 <!-- Reset Modal -->
+<!-- 종목 수동 추가 모달 -->
+<!-- 종목 수정 모달 -->
+<div id="edit-holding-modal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center hidden" onclick="closeEditHoldingModal()">
+  <div class="card p-6 w-full max-w-md mx-4" onclick="event.stopPropagation()">
+    <h3 class="text-base font-bold text-dark mb-4 flex items-center gap-2">
+      <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+      종목 수정
+    </h3>
+
+    <!-- 선택된 종목 정보 -->
+    <div id="edit-holding-info" class="rounded-xl border border-accent p-3 mb-3" style="background:linear-gradient(135deg,#6c5ce710,#a29bfe10)">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-base font-bold text-dark" id="eh-name">-</p>
+          <p class="text-xs text-muted"><span id="eh-ticker">-</span> · <span id="eh-market">-</span></p>
+        </div>
+        <div class="text-right">
+          <p class="text-xs text-muted">현재가</p>
+          <p class="text-sm font-bold text-dark" id="eh-cur-price">-</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 수량 + 매수가 입력 -->
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs text-muted block mb-1.5">보유 수량 <span class="text-coral">*</span></label>
+        <input id="eh-qty" type="number" step="any" min="0" placeholder="예: 10, 0.5"
+          class="w-full border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent">
+      </div>
+      <div>
+        <label class="text-xs text-muted block mb-1.5 flex items-center justify-between">
+          <span>평균 매수가 <span class="text-coral">*</span> <span class="text-light">(1주당)</span></span>
+          <button type="button" onclick="ehUseCurrentPrice()" class="text-xs text-accent hover:underline font-semibold">현재가로</button>
+        </label>
+        <input id="eh-avg-price" type="number" step="any" min="0" placeholder="원"
+          class="w-full border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent">
+        <p id="eh-hint" class="text-xs text-muted mt-1">변경 시 총 매수금액도 자동 재계산됩니다</p>
+      </div>
+      <div class="rounded-xl bg-gray-50 p-3 space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-muted">총 매수금액</span>
+          <span id="eh-total-cost" class="text-sm font-bold text-dark">0원</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-muted">현재 평가금액</span>
+          <span id="eh-total-value" class="text-sm font-bold text-dark">0원</span>
+        </div>
+        <div class="flex items-center justify-between border-t border-divider pt-1.5">
+          <span class="text-xs text-muted">예상 손익</span>
+          <span id="eh-total-pnl" class="text-sm font-bold text-dark">0원 (0%)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-2 mt-5">
+      <button onclick="closeEditHoldingModal()" class="flex-1 py-2.5 text-sm font-medium text-muted border border-divider rounded-xl hover:bg-gray-50 transition">취소</button>
+      <button onclick="submitEditHolding()" class="flex-1 btn-primary py-2.5 text-sm">저장</button>
+    </div>
+  </div>
+</div>
+
+<div id="manual-add-modal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center hidden" onclick="closeManualAddModal()">
+  <div class="card p-6 w-full max-w-md mx-4" onclick="event.stopPropagation()">
+    <h3 class="text-base font-bold text-dark mb-4 flex items-center gap-2">
+      <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      종목 추가
+    </h3>
+
+    <!-- STEP 1: 검색 -->
+    <div id="ma-step1">
+      <label class="text-xs text-muted block mb-1.5">종목 검색</label>
+      <div class="flex gap-2 mb-3">
+        <input id="ma-search" type="text" placeholder="종목명 또는 티커 (삼성전자, NVDA...)"
+          class="flex-1 border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent"
+          onkeydown="if(event.key==='Enter') maDoSearch()" autocomplete="off">
+        <button onclick="maDoSearch()" class="btn-primary px-4 py-2.5 text-sm">검색</button>
+      </div>
+      <div id="ma-search-results" class="space-y-1 max-h-[45vh] overflow-y-auto"></div>
+    </div>
+
+    <!-- STEP 2: 종목 선택됨 → 수량 입력 -->
+    <div id="ma-step2" class="hidden">
+      <!-- 선택된 종목 정보 카드 -->
+      <div id="ma-selected-card" class="rounded-xl border border-accent p-4 mb-4" style="background:linear-gradient(135deg,#6c5ce710,#a29bfe10)">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <span id="ma-sel-name" class="text-base font-bold text-dark"></span>
+            <span id="ma-sel-ticker" class="text-xs text-muted ml-1.5"></span>
+            <span id="ma-sel-market" class="text-xs ml-1"></span>
+          </div>
+          <button onclick="maBackToSearch()" class="text-xs text-accent hover:underline">다른 종목</button>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div class="bg-white rounded-lg p-2 border border-divider">
+            <p class="text-xs text-muted">현재가</p>
+            <p id="ma-sel-price" class="text-sm font-bold text-dark">-</p>
+          </div>
+          <div class="bg-white rounded-lg p-2 border border-divider">
+            <p class="text-xs text-muted">전일 대비</p>
+            <p id="ma-sel-change" class="text-sm font-bold">-</p>
+          </div>
+          <div class="bg-white rounded-lg p-2 border border-divider">
+            <p class="text-xs text-muted">시가총액</p>
+            <p id="ma-sel-cap" class="text-sm font-bold text-dark">-</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 매수 모드 탭: 정수 / 소수점 -->
+      <div class="flex gap-1 mb-3 p-1 bg-gray-100 rounded-xl text-xs">
+        <button type="button" id="ma-mode-int" onclick="maSetMode('int')"
+          class="flex-1 py-1.5 rounded-lg font-semibold bg-white text-dark shadow-sm">정수 매수</button>
+        <button type="button" id="ma-mode-frac" onclick="maSetMode('frac')"
+          class="flex-1 py-1.5 rounded-lg font-semibold text-muted">소수점 매수 <span class="text-light">(조각/해외)</span></button>
+      </div>
+
+      <!-- 수량 & 매수가 입력 -->
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs text-muted block mb-1.5">
+            보유 수량 <span class="text-coral">*</span>
+            <span id="ma-qty-hint" class="text-light">(정수)</span>
+          </label>
+          <input id="ma-qty" type="number" step="1" min="0" placeholder="예: 10"
+            class="w-full border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent"
+            oninput="maCalcTotal()" onkeyup="maCalcTotal()" onchange="maCalcTotal()">
+          <p id="ma-qty-err" class="text-xs text-coral mt-1 hidden"></p>
+        </div>
+        <div>
+          <label class="text-xs text-muted block mb-1.5 flex items-center justify-between">
+            <span>매수 단가 <span class="text-coral">*</span> <span class="text-light">(1주당 구입 가격)</span></span>
+            <button type="button" onclick="maUseCurrentPrice()" class="text-xs text-accent hover:underline font-semibold">현재가로</button>
+          </label>
+          <input id="ma-price" type="number" step="any" min="0" placeholder="예: 72000"
+            class="w-full border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent"
+            oninput="maCalcTotal()" onkeyup="maCalcTotal()" onchange="maCalcTotal()">
+          <p id="ma-price-hint" class="text-xs text-muted mt-1">현재가: <span id="ma-cur-price-hint" class="font-semibold">-</span></p>
+        </div>
+        <div>
+          <label class="text-xs text-muted block mb-1.5">매수일 <span class="text-light">(선택)</span></label>
+          <input id="ma-date" type="date"
+            class="w-full border border-divider rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-accent">
+          <p class="text-xs text-muted mt-1">매수 날짜를 입력하면 거래내역에도 자동 기록됩니다</p>
+        </div>
+        <div class="rounded-xl bg-gray-50 p-3 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-muted">총 매수금액</span>
+            <span id="ma-total-cost" class="text-sm font-bold text-dark">0원</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-muted">현재 평가금액</span>
+            <span id="ma-total-value" class="text-sm font-bold text-dark">0원</span>
+          </div>
+          <div class="flex items-center justify-between border-t border-divider pt-1.5">
+            <span class="text-xs text-muted">예상 손익</span>
+            <span id="ma-total-pnl" class="text-sm font-bold text-dark">0원 (0%)</span>
+          </div>
+        </div>
+      </div>
+
+      <p id="ma-err" class="text-xs text-coral mt-3 px-2 py-1.5 bg-red-50 rounded-lg hidden"></p>
+
+      <div class="flex gap-2 mt-5">
+        <button onclick="closeManualAddModal()" class="flex-1 py-2.5 text-sm font-medium text-muted border border-divider rounded-xl hover:bg-gray-50 transition">취소</button>
+        <button onclick="submitManualAdd()" class="flex-1 btn-primary py-2.5 text-sm">포트폴리오에 추가</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="reset-modal" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center hidden">
   <div class="card p-6 w-full max-w-sm mx-4" onclick="event.stopPropagation()">
     <div class="text-center mb-5">
@@ -1568,6 +2133,25 @@ const fmtSign = (n) => (n >= 0 ? '+' : '') + fmt(n);
 const pctClass = (v) => v >= 0 ? 'pos' : 'neg';
 const badgeClass = (v) => v >= 0 ? 'badge-pos' : 'badge-neg';
 
+// ── 소수점 정확도 처리: 부동소수점 오차 제거 + 표시 정리 ──
+function normalizeQty(q) {
+  const n = parseFloat(q);
+  if (!isFinite(n) || n <= 0) return 0;
+  // 8 decimal places, strip FP errors (0.1+0.2 = 0.30000000000000004 → 0.3)
+  return Math.round(n * 1e8) / 1e8;
+}
+function formatQty(q) {
+  const n = normalizeQty(q);
+  if (n === 0) return '0';
+  if (n % 1 === 0) return n.toString();
+  // strip trailing zeros: 0.5000 → 0.5, 0.123400 → 0.1234
+  return n.toFixed(8).replace(/0+$/, '').replace(/\.$/, '');
+}
+function safeCost(qty, price) {
+  // qty에 FP 오차가 있을 수 있으므로 normalize 후 곱한 뒤 정수 반올림 (KRW 단위)
+  return Math.round(normalizeQty(qty) * (parseFloat(price) || 0));
+}
+
 let portfolioChart = null;
 const chartColors = ['#6c5ce7','#00b894','#fdcb6e','#ff6b6b','#74b9ff','#fd79a8','#a29bfe','#55efc4'];
 
@@ -1634,13 +2218,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function switchImportTab(tab) {
-  ['excel','image','test'].forEach(t => {
-    document.getElementById('imp-tab-'+t).classList.toggle('bg-white', t===tab);
-    document.getElementById('imp-tab-'+t).classList.toggle('text-accent', t===tab);
-    document.getElementById('imp-tab-'+t).classList.toggle('shadow-sm', t===tab);
-    document.getElementById('imp-tab-'+t).classList.toggle('text-muted', t!==tab);
-    document.getElementById('imp-pane-'+t).classList.toggle('hidden', t!==tab);
+  ['excel','image','text','test'].forEach(t => {
+    const tabEl = document.getElementById('imp-tab-'+t);
+    const paneEl = document.getElementById('imp-pane-'+t);
+    if(tabEl) {
+      tabEl.classList.toggle('bg-white', t===tab);
+      tabEl.classList.toggle('text-accent', t===tab);
+      tabEl.classList.toggle('shadow-sm', t===tab);
+      tabEl.classList.toggle('text-muted', t!==tab);
+    }
+    if(paneEl) paneEl.classList.toggle('hidden', t!==tab);
   });
+}
+async function parseImportTextInput() {
+  const txt = document.getElementById('imp-text-input').value.trim();
+  if(!txt) { showToast('텍스트를 붙여넣어 주세요'); return; }
+  // ss-text-input에 넣고 파싱
+  document.getElementById('ss-text-input').value = txt;
+  parseTextInput();
+  // _ssResult에 결과가 있으면 바로 포트폴리오 적용
+  if(_ssResult && _ssResult.length > 0) {
+    await applyScreenshotResult();
+    closeImportModal();
+  }
 }
 
 function handleImportDrop(e) {
@@ -1751,45 +2351,31 @@ async function runSaveTest() {
   addLog('모든 테스트 완료', null);
 }
 
-// Upload
-function openUploadModal() { document.getElementById('upload-modal').classList.remove('hidden'); }
-function closeUploadModal() { document.getElementById('upload-modal').classList.add('hidden'); document.getElementById('upload-status').classList.add('hidden'); }
-document.getElementById('upload-modal').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeUploadModal(); });
-
-function handleDrop(e) {
-  e.preventDefault();
-  e.currentTarget.classList.remove('drag-over');
-  if (e.dataTransfer.files.length) uploadFile(e.dataTransfer.files[0]);
-}
-function handleFileSelect(input) { if (input.files.length) uploadFile(input.files[0]); }
-
-async function uploadFile(file) {
-  const status = document.getElementById('upload-status');
-  status.classList.remove('hidden');
-  status.className = 'mb-4 p-4 rounded-xl text-sm bg-gray-50 text-muted';
-  status.textContent = '업로드 중...';
-
-  const form = new FormData();
-  form.append('file', file);
-
-  try {
-    const res = await fetch('/api/upload', { method: 'POST', body: form });
-    const data = await res.json();
-    if (data.error) {
-      status.className = 'mb-4 p-4 rounded-xl text-sm bg-red-50 text-red-600';
-      status.textContent = data.error;
-    } else {
-      status.className = 'mb-4 p-4 rounded-xl text-sm bg-green-50 text-green-700';
-      status.textContent = `${data.count}개 종목이 업로드되었습니다!`;
-      setTimeout(() => { closeUploadModal(); refreshAll(); }, 1500);
-    }
-  } catch(e) {
-    status.className = 'mb-4 p-4 rounded-xl text-sm bg-red-50 text-red-600';
-    status.textContent = '업로드 실패: ' + e.message;
-  }
-}
+// (구 Upload Modal 코드 제거 — import-modal로 통합됨)
 
 // Portfolio (본체는 하단 loadPortfolio(checkAlerts) 참고)
+
+// 포트폴리오 정렬 상태
+let _sortKey = 'current_value';
+let _sortAsc = false;
+
+function sortPortfolio(key) {
+  if (_sortKey === key) {
+    _sortAsc = !_sortAsc;
+  } else {
+    _sortKey = key;
+    _sortAsc = false; // 새 컬럼은 내림차순부터
+  }
+  // 모든 인디케이터 초기화
+  ['name','qty','avg_price','current_price','current_value','profit','profit_pct'].forEach(k => {
+    const el = document.getElementById('sort-' + k);
+    if (el) el.textContent = '';
+  });
+  // 현재 컬럼 표시
+  const indEl = document.getElementById('sort-' + key);
+  if (indEl) indEl.textContent = _sortAsc ? '▲' : '▼';
+  if (_rawPortfolio) renderPortfolio(_rawPortfolio);
+}
 
 function renderPortfolio(data) {
   const s = data.summary;
@@ -1810,10 +2396,40 @@ function renderPortfolio(data) {
   usdEl.textContent = s.usd_krw.toLocaleString() + '원';
   usdEl.classList.remove('loading');
 
-  const filtered = filterHoldings(data.holdings).filter(h => !_hiddenTickers.has(h.ticker));
+  let filtered = filterHoldings(data.holdings).filter(h => !_hiddenTickers.has(h.ticker));
   updateFilterCount(data.holdings.length, filtered.length);
 
+  // 정렬
+  if (_sortKey) {
+    const k = _sortKey, asc = _sortAsc;
+    filtered = filtered.slice().sort((a, b) => {
+      let va = a[k], vb = b[k];
+      if (typeof va === 'string') {
+        return (asc ? 1 : -1) * va.localeCompare(vb || '');
+      }
+      va = Number(va || 0); vb = Number(vb || 0);
+      return asc ? va - vb : vb - va;
+    });
+  }
+
   const tbody = document.getElementById('portfolio-body');
+
+  // 빈 포트폴리오: 환영 안내 표시
+  if (data.holdings.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="10" class="py-12 text-center">
+      <div class="flex flex-col items-center gap-3">
+        <div class="text-5xl">📊</div>
+        <p class="text-base font-bold text-dark">포트폴리오가 비어있습니다</p>
+        <p class="text-xs text-muted">시작하려면 보유 종목을 추가하세요</p>
+        <button onclick="openManualAddModal()" class="btn-primary px-5 py-2.5 text-sm font-bold mt-2">
+          ➕ 첫 종목 추가하기
+        </button>
+        <p class="text-xs text-light mt-2">또는 헤더 검색창에서 종목 검색 후 [+ 추가]</p>
+      </div>
+    </td></tr>`;
+    return;
+  }
+
   tbody.innerHTML = filtered.map(h => {
     if (h.error) return `<tr><td class="py-3 px-3 text-dark">${h.name}</td><td colspan="9" class="text-coral text-xs py-3">${h.error}</td></tr>`;
     const tp = _prefs.target_prices[h.ticker];
@@ -1825,7 +2441,7 @@ function renderPortfolio(data) {
         <div class="font-semibold text-dark">${h.name}</div>
         <div class="text-xs text-light">${h.ticker} · ${h.market === 'US' ? '미국' : '국내'}</div>
       </td>
-      <td class="text-right py-3 px-2 text-dark">${h.qty % 1 === 0 ? h.qty : h.qty.toFixed(4)}</td>
+      <td class="text-right py-3 px-2 text-dark">${formatQty(h.qty)}</td>
       <td class="text-right py-3 px-2 text-muted">${fmt(h.avg_price)}</td>
       <td class="text-right py-3 px-2 text-dark font-semibold">${fmt(h.current_price)}</td>
       <td class="text-right py-3 px-2 text-dark">${fmt(h.current_value)}</td>
@@ -1840,10 +2456,18 @@ function renderPortfolio(data) {
           class="text-lg hover:scale-110 transition-transform">${note ? '📝' : '📄'}</button>
       </td>
       <td class="text-right py-3 px-3"><span class="text-xs px-2.5 py-1 rounded-full font-medium ${badgeClass(h.profit_pct)}">${(h.profit_pct>=0?'+':'') + h.profit_pct}%</span></td>
-      <td class="py-3 px-2 text-center">
+      <td class="py-3 px-2 text-center flex items-center gap-1 justify-center">
+        <button onclick="openEditHoldingModal('${h.ticker}','${h.name.replace(/'/g,"\\'")}','${h.market}',${h.qty},${h.avg_price||0},${h.current_price||0})" title="수정"
+          class="text-light hover:text-accent transition p-1 rounded-lg hover:bg-purple-50">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+        </button>
         <button onclick="hideStock('${h.ticker}','${h.name}')" title="숨기기"
           class="text-light hover:text-coral transition p-1 rounded-lg hover:bg-red-50">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+        </button>
+        <button onclick="deleteHolding('${h.ticker}','${h.name}')" title="삭제"
+          class="text-light hover:text-red-600 transition p-1 rounded-lg hover:bg-red-50">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
         </button>
       </td>
     </tr>`;
@@ -1872,35 +2496,22 @@ function renderPortfolio(data) {
   }
 }
 
-// Sectors
-function renderSectorBar(item) {
-  const w = Math.min(Math.abs(item.change) * 12, 70);
-  const isPos = item.change >= 0;
-  const barColor = isPos ? 'background:linear-gradient(90deg,#ff6b6b80,#ff6b6b40)' : 'background:linear-gradient(270deg,#74b9ff80,#74b9ff40)';
-  return `<div class="flex items-center text-xs py-1.5 px-2 rounded-lg hover:bg-gray-50 transition">
-    <span class="w-24 truncate text-dark font-medium">${item.name}</span>
-    <div class="flex-1 mx-2 h-3.5 bg-gray-100 rounded-full overflow-hidden relative">
-      <div class="sector-bar absolute top-0 ${isPos ? 'left-1/2' : 'right-1/2'} h-full" style="width:${w}%;${barColor}"></div>
-    </div>
-    <span class="w-16 text-right font-mono font-semibold ${pctClass(item.change)}">${(item.change>=0?'+':'') + item.change}%</span>
-  </div>`;
-}
-
-// (구 loadSectors/loadNews 제거 — 아래에 통합 버전 있음)
+// (구 loadSectors/loadNews/renderSectorBar 제거 — 아래에 통합 버전 있음)
 
 // ── 탭 전환 ──────────────────────────────────────────────
 function switchTab(tab) {
-  ['portfolio','analysis','compare','simple','period','tx','news','search','stockcompare','tools'].forEach(t => {
+  ['portfolio','analysis','compare','simple','period','tx','news','sim','search','stockcompare','tools'].forEach(t => {
     document.getElementById('pane-'+t).classList.toggle('hidden', tab !== t);
     document.getElementById('tab-'+t).classList.toggle('active', tab === t);
   });
   if (tab === 'analysis'     && !window._analysisLoaded) loadAnalysis();
-  if (tab === 'compare'      && !window._compareLoaded)  loadCompare();
+  if (tab === 'compare') { renderAlgoToggleList(); if (!window._compareLoaded) loadCompare(); }
   if (tab === 'simple'       && _rawPortfolio)           renderSimple(_rawPortfolio);
   if (tab === 'period'       && !window._periodLoaded)   loadPeriod();
   if (tab === 'period')                                  loadBenchmark();
   if (tab === 'tx')                                      loadTxTab();
   if (tab === 'news'         && !window._newsLoaded)     loadNewsTab();
+  if (tab === 'sim')                                     loadSimulation();
   if (tab === 'search')                                  renderSearchWishlist();
   if (tab === 'stockcompare')                            renderCmpChips();
   if (tab === 'tools')                                   initToolsTab();
@@ -2118,26 +2729,68 @@ let _newsLastSeen = JSON.parse(localStorage.getItem('news_last_seen') || '{}');
 
 function renderNewsSubs() {
   const el = document.getElementById('news-subs-list');
+  const cntEl = document.getElementById('news-subs-count');
   if (!el) return;
+  if (cntEl) cntEl.textContent = _newsSubs.length ? `(${_newsSubs.length})` : '';
   if (!_newsSubs.length) {
-    el.innerHTML = '<span class="text-xs text-muted">구독 중인 키워드 없음</span>'; return;
+    el.innerHTML = '<span class="text-xs text-muted">구독 중인 키워드 없음 — 입력 후 <b>+ 구독</b> 클릭</span>'; return;
   }
   el.innerHTML = _newsSubs.map(s =>
-    `<span class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium" style="background:#6c5ce720;color:#6c5ce7">
-      ${s}
-      <button onclick="removeNewsSub('${s}')" class="hover:text-red-500 transition ml-0.5">✕</button>
+    `<span class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium cursor-pointer hover:opacity-80 transition" style="background:#6c5ce720;color:#6c5ce7"
+           title="클릭해서 이 키워드로 검색" onclick="setNewsSearch('${s.replace(/'/g,"\\'")}')">
+      🔔 ${s}
+      <button onclick="event.stopPropagation();removeNewsSub('${s.replace(/'/g,"\\'")}')" class="hover:text-red-500 transition ml-0.5">✕</button>
     </span>`
   ).join('');
 }
 
 function addNewsSub() {
-  const input = document.getElementById('news-sub-input');
+  // Backwards compatible (old id) - fallback to unified input
+  const input = document.getElementById('news-sub-input') || document.getElementById('news-unified-input');
   if (!input) return;
   const val = input.value.trim();
-  if (!val || _newsSubs.includes(val)) { input.value = ''; return; }
+  if (!val) return;
+  if (_newsSubs.includes(val)) {
+    showToast(`ℹ️ "${val}" 이미 구독 중입니다`);
+    input.value = '';
+    return;
+  }
   _newsSubs.push(val);
   localStorage.setItem('news_subs', JSON.stringify(_newsSubs));
   input.value = '';
+  renderNewsSubs();
+  showToast(`🔔 "${val}" 뉴스 구독 추가됨`);
+}
+
+// 통합 입력 헬퍼: 한 입력창에서 검색과 구독 모두 사용
+function runNewsSearchFromUnified() {
+  const val = document.getElementById('news-unified-input').value.trim();
+  if (!val) { showToast('❌ 키워드를 입력하세요'); return; }
+  document.getElementById('news-search-input') ? null : (() => {
+    // 가상 input 으로 runNewsSearch 호환성 유지
+  })();
+  // runNewsSearch가 'news-search-input' id를 참조하므로 임시로 값 세팅
+  let si = document.getElementById('news-search-input');
+  if (!si) {
+    si = document.createElement('input');
+    si.id = 'news-search-input';
+    si.type = 'hidden';
+    document.body.appendChild(si);
+  }
+  si.value = val;
+  runNewsSearch();
+}
+
+function addNewsSubFromUnified() {
+  const val = document.getElementById('news-unified-input').value.trim();
+  if (!val) { showToast('❌ 키워드를 입력하세요'); return; }
+  if (_newsSubs.includes(val)) {
+    showToast(`ℹ️ "${val}" 이미 구독 중입니다`);
+    return;
+  }
+  _newsSubs.push(val);
+  localStorage.setItem('news_subs', JSON.stringify(_newsSubs));
+  document.getElementById('news-unified-input').value = '';
   renderNewsSubs();
   showToast(`🔔 "${val}" 뉴스 구독 추가됨`);
 }
@@ -2181,15 +2834,62 @@ async function toggleNewsNotify() {
   }
 }
 
+// ── 클라이언트 사이드 키워드 별칭 (서버 KEYWORD_ALIASES 축소판) ──
+const NEWS_KEYWORD_ALIASES = {
+  'aapl': ['apple','애플','아이폰'], 'apple': ['aapl','애플'], '애플': ['apple','aapl','아이폰'],
+  'nvda': ['nvidia','엔비디아'], 'nvidia': ['nvda','엔비디아'], '엔비디아': ['nvidia','nvda'],
+  'tsla': ['tesla','테슬라'], 'tesla': ['tsla','테슬라'], '테슬라': ['tesla','tsla'],
+  'msft': ['microsoft','마이크로소프트','ms'], 'microsoft': ['msft','마이크로소프트'], '마이크로소프트': ['microsoft','msft'],
+  'googl': ['google','구글','alphabet'], 'google': ['googl','구글','goog'], '구글': ['google','googl','alphabet'],
+  'amzn': ['amazon','아마존'], 'amazon': ['amzn','아마존'], '아마존': ['amazon','amzn'],
+  'meta': ['facebook','메타','페이스북'], '메타': ['meta','facebook'], '페이스북': ['meta','facebook'],
+  '005930': ['삼성전자','삼성','samsung'], '삼성전자': ['005930','삼성','samsung'], '삼성': ['삼성전자','005930','samsung'], 'samsung': ['삼성','삼성전자'],
+  '000660': ['하이닉스','sk하이닉스','skhynix'], 'sk하이닉스': ['000660','하이닉스'], '하이닉스': ['sk하이닉스','000660','skhynix'],
+  '네이버': ['naver','035420'], 'naver': ['네이버','035420'],
+  '카카오': ['kakao','035720'], 'kakao': ['카카오','035720'],
+  '현대차': ['현대자동차','hyundai','005380'], '현대자동차': ['현대차','hyundai'],
+  '반도체': ['semiconductor','chip','메모리','dram','nand','hbm'],
+  '이차전지': ['2차전지','배터리','battery'], '배터리': ['이차전지','2차전지','battery'],
+  'ai': ['인공지능','chatgpt','gpt'], '인공지능': ['ai','gpt'],
+  '전기차': ['ev','electric vehicle','tesla','테슬라'],
+  '금리': ['interest rate','fed','연준','기준금리','fomc'], '연준': ['fed','fomc','금리'],
+  '환율': ['dollar','exchange rate','usd','krw','달러'], '달러': ['dollar','usd','환율'],
+  '유가': ['oil','crude','wti','원유'], '원유': ['oil','crude','wti','유가'],
+};
+
+function normalizeText(s) {
+  if (!s) return '';
+  return String(s).toLowerCase().replace(/[\s\-_.()·/]+/g, '');
+}
+
+function expandKeyword(kw) {
+  if (!kw) return new Set();
+  const out = new Set();
+  const raw = String(kw).trim();
+  const norm = normalizeText(raw);
+  if (norm) out.add(norm);
+  const aliases = NEWS_KEYWORD_ALIASES[norm] || NEWS_KEYWORD_ALIASES[raw.toLowerCase()] || [];
+  aliases.forEach(a => { const n = normalizeText(a); if (n) out.add(n); });
+  return out;
+}
+
+function keywordMatchesText(kw, text) {
+  const aliases = expandKeyword(kw);
+  const t = normalizeText(text);
+  if (!t) return false;
+  for (const a of aliases) { if (a && t.includes(a)) return true; }
+  return false;
+}
+
 function checkNewsAlerts(newsItems) {
   if (!newsItems || !newsItems.length) return;
   if (!_newsNotifyOn || Notification.permission !== 'granted' || !_newsSubs.length) return;
   newsItems.forEach(item => {
-    const title = (item.title || '').toLowerCase();
+    const title = item.title || '';
     const id = item.url || item.title;
     if (_newsLastSeen[id]) return;
     _newsSubs.forEach(sub => {
-      if (title.includes(sub.toLowerCase())) {
+      if (keywordMatchesText(sub, title)) {
         playNotifySound();
         new Notification(`📰 구독 뉴스: ${sub}`, {
           body: item.title,
@@ -2351,20 +3051,42 @@ function renderWishlist() {
     const notifyOn = _wishPerNotify[w.ticker] !== false; // 기본값 true
     const notifyColor = notifyOn ? '#00b894' : '#b2bec3';
     const notifyText = notifyOn ? '🔔' : '🔕';
+    const safeName = w.name.replace(/'/g,"\\'");
     return `
-    <div class="flex items-center gap-2 p-2 rounded-xl border border-divider hover:border-accent transition">
+    <div class="flex items-center gap-1.5 p-2 rounded-xl border border-divider hover:border-accent transition">
       <div class="flex-1 min-w-0">
         <p class="text-xs font-bold text-dark truncate">${w.name}</p>
         <p class="text-xs text-muted">${w.ticker} · ${w.market === 'US' ? '🇺🇸' : '🇰🇷'}</p>
       </div>
-      ${inPortfolio ? '<span class="text-xs text-mint shrink-0">✓ 보유</span>' : ''}
+      ${inPortfolio
+        ? '<span class="text-xs text-mint shrink-0">✓ 보유</span>'
+        : `<button onclick="event.stopPropagation();wishToBuyReal('${w.ticker}','${safeName}','${w.market}')"
+              class="shrink-0 text-xs px-2 py-1 rounded-lg bg-accent text-white hover:opacity-90 transition font-bold"
+              title="실제 포트폴리오에 추가">💰 매수</button>`}
       <button onclick="event.stopPropagation();toggleWishItemNotify('${w.ticker}')"
-        class="shrink-0 text-lg transition" title="${notifyOn ? '알림 끄기' : '알림 켜기'}"
+        class="shrink-0 text-base transition" title="${notifyOn ? '알림 끄기' : '알림 켜기'}"
         style="color:${notifyColor}">${notifyText}</button>
-      <button onclick="toggleWishlist('${w.ticker}','${w.name.replace(/'/g,"\\'")}','${w.market}',${w.price||0})"
-        class="shrink-0 text-yellow-400 hover:text-muted transition text-base" title="제거">⭐</button>
+      <button onclick="toggleWishlist('${w.ticker}','${safeName}','${w.market}',${w.price||0})"
+        class="shrink-0 text-yellow-400 hover:text-muted transition text-base" title="위시리스트 제거">⭐</button>
     </div>`;
   }).join('');
+}
+
+// 위시리스트 → 실제 매수 (현재가 자동 조회 후 모달 열기)
+async function wishToBuyReal(ticker, name, market) {
+  let price = 0, changePct = 0, cap = '';
+  try {
+    const r = await fetch('/api/search?q=' + encodeURIComponent(ticker));
+    const d = await r.json();
+    const hit = (d.results || []).find(x => x.ticker === ticker) || (d.results || [])[0];
+    if (hit) {
+      price = hit.price_krw || 0;
+      changePct = hit.change_pct || 0;
+      cap = hit.market_cap || '';
+    }
+  } catch(e) {}
+  openManualAddModal();
+  setTimeout(() => maSelectStock(ticker, name, market, price, changePct, cap), 100);
 }
 
 function renderSearchWishlist() {
@@ -2412,6 +3134,12 @@ document.addEventListener('DOMContentLoaded', () => {
   loadWishlistFromServer();
   loadHiddenFromServer();
   loadPrefs();
+  syncInit();
+  // 업데이트 체크 (5초 후 백그라운드) + 주기 폴링 시작
+  setTimeout(() => {
+    checkForUpdate(true);
+    startUpdatePolling();
+  }, 5000);
   // 알림 버튼 상태 복원
   updateWishNotifyBtn();
   // 다크모드 복원
@@ -2462,6 +3190,284 @@ function renderSectorCards(elId, items, error) {
   }).join('');
 }
 
+// ── 상대 시간 (N분 전 / N시간 전) ──
+function timeAgo(ts) {
+  if (!ts || ts <= 0) return '';
+  const now = Math.floor(Date.now()/1000);
+  const diff = now - ts;
+  if (diff < 0)      return '방금';
+  if (diff < 60)     return diff + '초 전';
+  if (diff < 3600)   return Math.floor(diff/60) + '분 전';
+  if (diff < 86400)  return Math.floor(diff/3600) + '시간 전';
+  if (diff < 604800) return Math.floor(diff/86400) + '일 전';
+  // 그 이상은 MM/DD HH:MM
+  const d = new Date(ts*1000);
+  const pad = n => String(n).padStart(2,'0');
+  return `${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// ── 뉴스 검색 ──
+function setNewsSearch(q) {
+  // 통합 input 우선, 기존 id fallback
+  const unified = document.getElementById('news-unified-input');
+  if (unified) { unified.value = q; runNewsSearchFromUnified(); return; }
+  const old = document.getElementById('news-search-input');
+  if (old) { old.value = q; runNewsSearch(); }
+}
+async function runNewsSearch() {
+  // 통합 input 우선, 기존 id fallback
+  const q = (document.getElementById('news-search-input')?.value ?? document.getElementById('news-unified-input')?.value ?? '').trim();
+  const sort = document.getElementById('news-search-sort').value;
+  const lang = document.getElementById('news-search-lang').value;
+  const el   = document.getElementById('news-search-results');
+  if (!q) { showToast('❌ 검색어를 입력하세요'); return; }
+  el.classList.remove('hidden');
+  el.innerHTML = '<p class="text-xs text-muted text-center py-3">🔍 검색 중...</p>';
+  try {
+    const url = `/api/news/search?q=${encodeURIComponent(q)}&sort=${sort}&hl=${lang}`;
+    const res = await fetch(url);
+    const d = await res.json();
+    if (d.error) { el.innerHTML = `<p class="text-xs text-coral text-center py-3">${d.error}</p>`; return; }
+    const rows = d.results || [];
+    if (!rows.length) {
+      el.innerHTML = `<p class="text-xs text-muted text-center py-3">"${q}" 관련 뉴스를 찾지 못했습니다</p>`;
+      return;
+    }
+    el.innerHTML = `
+      <div class="flex items-center justify-between mb-1">
+        <p class="text-xs text-muted">🔍 <b class="text-accent">"${q}"</b> 검색 결과 <span class="font-bold text-dark">${rows.length}건</span></p>
+        <button onclick="clearNewsSearch()" class="text-xs text-coral hover:underline">✕ 닫기</button>
+      </div>
+      ${rows.map(n => {
+        const sent = n.sentiment;
+        const sentIcon  = sent === 'up' ? '📈' : sent === 'down' ? '📉' : '➡️';
+        const sentColor = sent === 'up' ? '#e17055' : sent === 'down' ? '#0984e3' : '#636e72';
+        const sentLabel = sent === 'up' ? '상승 가능성' : sent === 'down' ? '하락 가능성' : '중립';
+        const relHtml = (n.related || []).length
+          ? n.related.map(r => `<span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-accent text-white font-semibold">${r.name} <span class="opacity-70">${r.ticker}</span></span>`).join('')
+          : '';
+        return `
+        <div class="px-3 py-2.5 rounded-lg border border-divider hover:border-accent hover:bg-gray-50 transition">
+          <div class="flex items-start gap-2">
+            <span class="text-base shrink-0 mt-0.5">${sentIcon}</span>
+            <div class="flex-1 min-w-0">
+              <a href="${n.link}" target="_blank" class="text-sm font-medium text-dark hover:text-accent transition leading-snug block mb-1.5">${n.title}</a>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:${sentColor}18;color:${sentColor}">${sentLabel}</span>
+                ${relHtml}
+                ${n.source ? `<span class="text-xs text-muted">${n.source}</span>` : ''}
+                ${n.ts ? `<span class="text-xs text-muted font-semibold" title="${n.date||''}">🕒 ${timeAgo(n.ts)}</span>` : (n.date ? `<span class="text-xs text-muted">${n.date.slice(5,16)}</span>` : '')}
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}`;
+  } catch(e) {
+    el.innerHTML = `<p class="text-xs text-coral text-center py-3">오류: ${e.message}</p>`;
+  }
+}
+function clearNewsSearch() {
+  document.getElementById('news-search-input').value = '';
+  document.getElementById('news-search-results').classList.add('hidden');
+  document.getElementById('news-search-results').innerHTML = '';
+}
+
+// ══════════════════════════════════════════════════════════
+// 🎮 모의투자 (Simulation)
+// ══════════════════════════════════════════════════════════
+let _simSelected = null;  // { ticker, name, market, curPrice }
+
+async function loadSimulation() {
+  // 1) 모의 포트폴리오 리스트
+  try {
+    const res = await fetch('/api/simulation');
+    const d = await res.json();
+    renderSimList(d);
+  } catch(e) { console.error('loadSimulation:', e); }
+  // 2) 위시리스트 chips
+  try {
+    const res = await fetch('/api/wishlist');
+    const d = await res.json();
+    renderSimWishChips(d.wishlist || []);
+  } catch(e) { console.error('sim wishlist:', e); }
+}
+
+function renderSimList(d) {
+  const list = document.getElementById('sim-list');
+  const items = d.items || [];
+  const s = d.summary || {};
+
+  // 요약
+  document.getElementById('sim-total-cost').textContent  = (s.total_cost || 0).toLocaleString() + '원';
+  document.getElementById('sim-total-value').textContent = (s.total_value || 0).toLocaleString() + '원';
+  const pnlEl = document.getElementById('sim-total-pnl');
+  const pctEl = document.getElementById('sim-total-pct');
+  const pnl = s.total_pnl || 0, pct = s.total_pct || 0;
+  const sign = pnl >= 0 ? '+' : '';
+  pnlEl.textContent = `${sign}${pnl.toLocaleString()}원`;
+  pctEl.textContent = `${sign}${pct.toFixed(2)}%`;
+  const pnlCls = pnl > 0 ? 'text-base font-bold pos' : (pnl < 0 ? 'text-base font-bold neg' : 'text-base font-bold text-dark');
+  pnlEl.className = pnlCls;
+  pctEl.className = pnlCls;
+  document.getElementById('sim-count').textContent = `(${items.length}건)`;
+
+  // Best/Worst
+  const bestEl = document.getElementById('sim-best');
+  if (items.length >= 2 && s.best && s.worst) {
+    bestEl.classList.remove('hidden');
+    bestEl.innerHTML = `🏆 <b class="pos">${s.best.name} +${s.best.pct.toFixed(1)}%</b> / 📉 <b class="neg">${s.worst.name} ${s.worst.pct.toFixed(1)}%</b>`;
+  } else {
+    bestEl.classList.add('hidden');
+  }
+
+  if (!items.length) {
+    list.innerHTML = '<p class="px-5 py-8 text-xs text-muted text-center">모의 매수 기록이 없습니다. 위시리스트에서 관심 종목을 가상 매수해보세요!</p>';
+    return;
+  }
+
+  list.innerHTML = items.map(it => {
+    const mkt = it.market === 'US' ? '🇺🇸' : '🇰🇷';
+    const plus = it.pnl >= 0;
+    const sign = plus ? '+' : '';
+    const pnlCls = it.pnl > 0 ? 'pos' : (it.pnl < 0 ? 'neg' : 'text-dark');
+    return `
+    <div class="px-4 py-3 hover:bg-gray-50 transition">
+      <div class="flex items-start justify-between gap-3">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-sm font-bold text-dark">${it.name}</span>
+            <span class="text-xs text-muted">${it.ticker}</span>
+            <span class="text-xs">${mkt}</span>
+            ${it.buy_date ? `<span class="text-xs text-light">${it.buy_date}</span>` : ''}
+          </div>
+          <div class="grid grid-cols-4 gap-2 text-xs">
+            <div><span class="text-muted">수량:</span> <b>${it.qty}</b></div>
+            <div><span class="text-muted">매수가:</span> <b>${it.buy_price.toLocaleString()}원</b></div>
+            <div><span class="text-muted">현재가:</span> <b>${it.cur_price.toLocaleString()}원</b></div>
+            <div><span class="text-muted">총투자:</span> <b>${it.cost.toLocaleString()}원</b></div>
+          </div>
+          ${it.note ? `<p class="text-xs text-light italic mt-1">💬 ${it.note}</p>` : ''}
+        </div>
+        <div class="text-right shrink-0">
+          <p class="text-sm font-bold ${pnlCls}">${sign}${it.pnl.toLocaleString()}원</p>
+          <p class="text-xs font-semibold ${pnlCls}">${sign}${it.pnl_pct.toFixed(2)}%</p>
+          <button onclick="simDelete('${it.id}','${it.name}')" class="text-xs text-coral hover:underline mt-1">삭제</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSimWishChips(list) {
+  const el = document.getElementById('sim-wishlist-chips');
+  if (!list.length) {
+    el.innerHTML = '<p class="text-xs text-muted">위시리스트가 비어있습니다. 포트폴리오 탭에서 종목을 위시리스트에 추가하세요.</p>';
+    return;
+  }
+  el.innerHTML = list.map(w => {
+    const mkt = w.market === 'US' ? '🇺🇸' : '🇰🇷';
+    return `<button onclick="openSimBuyFromWish('${w.ticker}','${(w.name||'').replace(/'/g,"\\'")}','${w.market}')"
+      class="text-xs px-3 py-1.5 rounded-full border border-accent text-accent bg-white hover:bg-accent hover:text-white transition font-semibold">
+      ${mkt} ${w.name || w.ticker} <span class="opacity-60">+</span>
+    </button>`;
+  }).join('');
+}
+
+async function openSimBuyFromWish(ticker, name, market) {
+  // 현재가 조회
+  let curPrice = 0;
+  try {
+    const res = await fetch('/api/search?q=' + encodeURIComponent(ticker));
+    const d = await res.json();
+    const hit = (d.results || []).find(r => r.ticker === ticker) || (d.results || [])[0];
+    if (hit) curPrice = parseFloat(hit.price_krw) || 0;
+  } catch(e) {}
+  openSimBuyModal({ ticker, name, market, curPrice });
+}
+
+function openSimBuyModal(info) {
+  _simSelected = info;
+  document.getElementById('sim-buy-name').textContent   = info.name || info.ticker;
+  document.getElementById('sim-buy-ticker').textContent = info.ticker;
+  document.getElementById('sim-buy-market').textContent = info.market === 'US' ? '🇺🇸 미국' : '🇰🇷 국내';
+  document.getElementById('sim-buy-cur').textContent    = info.curPrice ? info.curPrice.toLocaleString() + '원' : '-';
+  document.getElementById('sim-buy-qty').value = '';
+  document.getElementById('sim-buy-price').value = info.curPrice || '';
+  document.getElementById('sim-buy-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('sim-buy-note').value = '';
+  document.getElementById('sim-buy-total').textContent = '0원';
+  document.getElementById('sim-buy-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('sim-buy-qty').focus(), 100);
+}
+
+function closeSimBuyModal() {
+  document.getElementById('sim-buy-modal').classList.add('hidden');
+}
+
+function simUseCurrentPrice() {
+  const cur = parseFloat(_simSelected?.curPrice) || 0;
+  document.getElementById('sim-buy-price').value = cur || '';
+  simCalcTotal();
+}
+
+function simCalcTotal() {
+  const q = parseFloat(document.getElementById('sim-buy-qty').value) || 0;
+  const p = parseFloat(document.getElementById('sim-buy-price').value) || 0;
+  document.getElementById('sim-buy-total').textContent = Math.round(q*p).toLocaleString() + '원';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  ['sim-buy-qty','sim-buy-price'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) ['input','keyup','change'].forEach(evt => el.addEventListener(evt, simCalcTotal));
+  });
+});
+
+async function submitSimBuy() {
+  if (!_simSelected) return;
+  const qty       = parseFloat(document.getElementById('sim-buy-qty').value);
+  const buyPrice  = parseFloat(document.getElementById('sim-buy-price').value);
+  const buyDate   = document.getElementById('sim-buy-date').value;
+  const note      = document.getElementById('sim-buy-note').value.trim();
+  if (!qty || qty <= 0)      { alert('수량을 입력하세요'); return; }
+  if (!buyPrice || buyPrice <= 0) { alert('매수가를 입력하세요'); return; }
+  try {
+    const res = await fetch('/api/simulation', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        ticker: _simSelected.ticker,
+        name:   _simSelected.name,
+        market: _simSelected.market,
+        qty, buy_price: buyPrice, buy_date: buyDate, note,
+      })
+    });
+    const d = await res.json();
+    if (d.error) { alert(d.error); return; }
+    showToast(`✅ 모의 매수 완료: ${_simSelected.name} ${qty}주`);
+    closeSimBuyModal();
+    loadSimulation();
+  } catch(e) { alert('실패: ' + e.message); }
+}
+
+async function simDelete(id, name) {
+  if (!confirm(`"${name}" 모의 매수를 삭제하시겠습니까?`)) return;
+  try {
+    await fetch(`/api/simulation/${id}`, { method:'DELETE' });
+    showToast('✅ 삭제됨');
+    loadSimulation();
+  } catch(e) { alert('실패: ' + e.message); }
+}
+
+async function simClearAll() {
+  if (!confirm('모의 매수 전체 기록을 초기화하시겠습니까?')) return;
+  try {
+    await fetch('/api/simulation/clear', { method:'POST' });
+    showToast('✅ 전체 초기화 완료');
+    loadSimulation();
+  } catch(e) { alert('실패: ' + e.message); }
+}
+
+
 async function loadNewsFeed() {
   const el = document.getElementById('news-categories');
   el.innerHTML = '<div class="card p-8 text-center text-muted">뉴스 불러오는 중...</div>';
@@ -2475,11 +3481,22 @@ async function loadNewsFeed() {
     }
     const allNewsItems = Object.values(cats).flat();
     checkNewsAlerts(allNewsItems);
-    el.innerHTML = Object.entries(cats).map(([cat, items]) => `
+    const refreshedAt = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    const refreshStr = `${pad(refreshedAt.getHours())}:${pad(refreshedAt.getMinutes())}:${pad(refreshedAt.getSeconds())}`;
+    const headerBar = `
+      <div class="flex items-center justify-between px-1 mb-2">
+        <span class="text-xs text-muted">📰 카테고리별 최신순 정렬</span>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-muted">마지막 갱신: <b class="text-dark">${refreshStr}</b></span>
+          <button onclick="loadNewsFeed()" class="text-xs text-accent hover:underline font-semibold">↻ 새로고침</button>
+        </div>
+      </div>`;
+    el.innerHTML = headerBar + Object.entries(cats).map(([cat, items]) => `
       <div class="card overflow-hidden">
         <div class="px-5 py-3 border-b border-divider flex items-center justify-between">
           <h3 class="text-sm font-bold text-dark">${cat}</h3>
-          <span class="text-xs text-muted">${items.length}건</span>
+          <span class="text-xs text-muted">${items.length}건 · 최신순</span>
         </div>
         <div class="divide-y divide-divider">
           ${items.length ? items.map(n => {
@@ -2516,14 +3533,124 @@ async function loadNewsFeed() {
 // ── 종목 검색 탭 ──────────────────────────────────────────
 let _searchMarket = 'all';
 
+let _headerSearchTimer = null;
+function headerSearchDebounce() {
+  clearTimeout(_headerSearchTimer);
+  _headerSearchTimer = setTimeout(() => headerQuickSearch(), 400);
+}
+function showHeaderResults() {
+  const dd = document.getElementById('header-search-dropdown');
+  const res = document.getElementById('header-search-results');
+  if (res.innerHTML.trim()) dd.classList.remove('hidden');
+}
+let _hsMarket = 'all';
+function setHeaderSearchMarket(m) {
+  _hsMarket = m;
+  ['all','kr','us'].forEach(k => {
+    const el = document.getElementById('hsm-' + k);
+    if (!el) return;
+    if (k === m) {
+      el.className = 'flex-1 text-xs px-2 py-1 rounded-lg font-bold bg-accent text-white';
+    } else {
+      el.className = 'flex-1 text-xs px-2 py-1 rounded-lg font-medium text-muted hover:bg-gray-100';
+    }
+  });
+  if (document.getElementById('header-search-input').value.trim()) {
+    headerQuickSearch();
+  }
+}
+
+async function headerQuickSearch() {
+  const q = document.getElementById('header-search-input').value.trim();
+  const dd = document.getElementById('header-search-dropdown');
+  const res = document.getElementById('header-search-results');
+  if (!q) { dd.classList.add('hidden'); return; }
+  dd.classList.remove('hidden');
+  res.innerHTML = '<p class="text-xs text-muted text-center py-4">🔎 검색 중...</p>';
+  try {
+    const r = await fetch('/api/search?q=' + encodeURIComponent(q) + '&market=' + _hsMarket);
+    const data = await r.json();
+    const rows = data.results || [];
+    if (!rows.length) {
+      res.innerHTML = '<p class="text-xs text-muted text-center py-4">검색 결과가 없습니다</p>';
+      return;
+    }
+    const portfolio = _rawPortfolio?.holdings || [];
+    const held = new Set(portfolio.map(h => h.ticker));
+    res.innerHTML = rows.slice(0, 8).map(r => {
+      const isHeld = held.has(r.ticker);
+      const mkt = r.market === 'US' ? '🇺🇸' : '🇰🇷';
+      const _p = r.price_krw||0; const _cp = r.change_pct||0; const _mc = r.market_cap||'';
+      return `<div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition cursor-pointer group"
+                   onclick="headerAddStock('${r.ticker}','${(r.name||'').replace(/'/g,"\\'")}','${r.market}',${_p},${_cp},'${_mc}')">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-bold text-dark truncate">${r.name}</span>
+            <span class="text-xs text-light">${r.ticker}</span>
+            <span class="text-xs">${mkt}</span>
+            ${isHeld ? '<span class="text-xs px-1.5 py-0.5 rounded-full bg-green-100 text-green-700 font-medium">보유중</span>' : ''}
+          </div>
+          ${r.sector ? `<p class="text-xs text-muted truncate">${r.sector}</p>` : ''}
+        </div>
+        <div class="text-right shrink-0">
+          ${r.price_krw ? `<p class="text-xs font-bold text-dark">${Number(r.price_krw).toLocaleString()}원</p>` : ''}
+          ${r.change_pct !== undefined ? `<p class="text-xs font-medium ${r.change_pct >= 0 ? 'pos' : 'neg'}">${r.change_pct >= 0 ? '+' : ''}${r.change_pct}%</p>` : ''}
+        </div>
+        <button class="shrink-0 text-xs px-2 py-1 rounded-lg font-bold transition
+          ${isHeld ? 'bg-gray-100 text-muted' : 'bg-accent text-white hover:opacity-90'}"
+          onclick="event.stopPropagation();headerAddStock('${r.ticker}','${(r.name||'').replace(/'/g,"\\'")}','${r.market}',${_p},${_cp},'${_mc}')"
+          ${isHeld ? 'disabled' : ''}>${isHeld ? '보유중' : '+ 추가'}</button>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    res.innerHTML = `<p class="text-xs text-coral text-center py-4">오류: ${e.message}</p>`;
+  }
+}
+function headerAddStock(ticker, name, market, price, changePct, cap) {
+  document.getElementById('header-search-dropdown').classList.add('hidden');
+  document.getElementById('header-search-input').value = '';
+  // 수동 추가 모달의 2단계로 바로 진입
+  openManualAddModal();
+  maSelectStock(ticker, name, market, price || 0, changePct || 0, cap || '');
+}
+// 외부 클릭 시 드롭다운 닫기
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('header-search-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('header-search-dropdown').classList.add('hidden');
+  }
+});
+
+function toggleSearchPanel() {
+  const panel = document.getElementById('search-panel');
+  panel.classList.toggle('hidden');
+  if (!panel.classList.contains('hidden')) {
+    document.getElementById('sp-search-input').focus();
+  }
+}
+
+async function doSearchPanel() {
+  const q = document.getElementById('sp-search-input').value.trim();
+  if (!q) return;
+  // 기존 doSearch 활용: search-input에 값 복사 후 호출, 결과를 sp-search-results에 복제
+  document.getElementById('search-input').value = q;
+  await doSearch();
+  document.getElementById('sp-search-results').innerHTML = document.getElementById('search-results').innerHTML;
+}
+
 function setSearchMarket(m) {
   _searchMarket = m;
   ['all','kr','us'].forEach(t => {
+    // pane-search 탭 내 버튼
     const btn = document.getElementById('smarket-'+t);
-    if (!btn) return;
-    btn.className = t === m
+    if (btn) btn.className = t === m
       ? 'flex-1 py-1.5 text-xs font-bold rounded-lg bg-white text-accent shadow-sm transition'
       : 'flex-1 py-1.5 text-xs font-bold rounded-lg text-muted hover:text-dark transition';
+    // search-panel (포트폴리오 탭 내 검색 패널) 버튼
+    const sp = document.getElementById('sp-market-'+t);
+    if (sp) sp.className = t === m
+      ? 'px-2 py-1 text-xs font-bold rounded-md bg-white text-accent shadow-sm'
+      : 'px-2 py-1 text-xs font-bold rounded-md text-muted hover:text-dark';
   });
   if (document.getElementById('search-input').value.trim()) doSearch();
 }
@@ -2599,7 +3726,7 @@ async function doSearch() {
         </div>
         ${!inPortfolio ? `
         <div class="mt-3 pt-3 border-t border-divider flex gap-2">
-          <input type="number" id="sq-qty-${r.ticker}" placeholder="수량" step="any" min="0"
+          <input type="number" id="sq-qty-${r.ticker}" placeholder="보유 주식 수 (소수점 가능)" step="any" min="0"
             class="flex-1 border border-divider rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-accent">
           <button onclick="addFromSearch('${r.ticker}','${safeName}','${r.market}',${r.price_krw||0})"
             class="px-4 py-2 btn-primary text-sm rounded-xl">+ 추가</button>
@@ -2623,9 +3750,17 @@ async function doSearch() {
 
 async function addFromSearch(ticker, name, market, price) {
   const qtyEl = document.getElementById('sq-qty-' + ticker);
-  const qty   = parseFloat(qtyEl?.value);
-  if (!qty || qty <= 0) { alert('수량을 입력해주세요'); return; }
-  const cost = Math.round(qty * price);
+  const qty   = normalizeQty(qtyEl?.value);
+  if (!qty || qty <= 0) {
+    if (qtyEl) {
+      qtyEl.classList.add('border-coral');
+      qtyEl.placeholder = '⚠️ 수량 입력 (소수점 가능)';
+      qtyEl.focus();
+      setTimeout(() => qtyEl.classList.remove('border-coral'), 2000);
+    }
+    return;
+  }
+  const cost = safeCost(qty, price);
   try {
     const holdings = (_rawPortfolio?.holdings || []).concat([{ name, ticker, market, qty, cost }]);
     const res = await fetch('/api/upload-json', {
@@ -2882,28 +4017,7 @@ const gradeConfig = {
   strong_down: { label:'강한 하락', cls:'grade-strong-down', icon:'▼▼' },
 };
 
-const indicatorLabels = {
-  'ma_align': '이평선 배열', 'cross': '골든/데드크로스',
-  'rsi': 'RSI(14)', 'macd': 'MACD',
-  'bb': '볼린저밴드', 'w52': '52주 위치', 'volume': '거래량',
-};
-
 let miniCharts = {};
-
-function renderScoreBar(score) {
-  const maxScore = 2;
-  const pct = Math.abs(score) / maxScore * 100;
-  const cls = score > 0 ? 'indicator-bar-pos' : score < 0 ? 'indicator-bar-neg' : 'indicator-bar-neu';
-  const label = score > 0 ? `+${score}` : `${score}`;
-  const labelCls = score > 0 ? 'pos' : score < 0 ? 'neg' : 'text-muted';
-  return `<div class="flex items-center gap-2 text-xs mb-1.5">
-    <span class="w-24 text-muted truncate">${''}</span>
-    <div class="flex-1 bg-gray-100 rounded-full h-2 overflow-hidden">
-      <div class="${cls}" style="width:${pct}%"></div>
-    </div>
-    <span class="w-6 text-right font-bold ${labelCls}">${label}</span>
-  </div>`;
-}
 
 // 지표별 쉬운 설명
 const INDICATOR_GUIDE = {
@@ -3023,69 +4137,76 @@ function renderAnalysisCard(a, idx) {
     </div>`;
   }).join('');
 
+  const detailId = `analysis-detail-${idx}`;
   return `
   <div class="card overflow-hidden">
-    <div class="px-5 pt-5 pb-4 cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden')">
-      <div class="flex items-start gap-3">
+    <!-- 헤더 (항상 표시) -->
+    <div class="px-6 pt-6 pb-5 cursor-pointer select-none"
+         onclick="const b=document.getElementById('${detailId}');b.classList.toggle('hidden');this.querySelector('.ana-arrow').classList.toggle('rotate-180');if(!b.classList.contains('hidden')&&_rawAnalysis)drawMiniCharts(_rawAnalysis)"
+    >
+      <div class="flex items-start gap-4">
         <div class="flex-1 min-w-0">
-          <div class="flex flex-wrap items-center gap-2 mb-1">
-            <h3 class="text-base font-bold text-dark">${a.name}</h3>
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <h3 class="text-lg font-bold text-dark">${a.name}</h3>
             <span class="text-xs text-muted">${a.ticker} · ${a.market==='US'?'미국':'국내'}</span>
             ${divBadge}
           </div>
-          <p class="text-xs text-muted">현재가 <span class="font-bold text-dark">${fmt(a.current_price)}원</span></p>
+          <p class="text-sm text-muted">현재가 <span class="font-bold text-dark">${fmt(a.current_price)}원</span></p>
         </div>
-        <div class="shrink-0 text-center px-4 py-2 rounded-2xl" style="background:${gradeBg}">
-          <div class="text-xl">${gradeEmoji}</div>
+        <div class="shrink-0 text-center px-3 py-1.5 rounded-xl" style="background:${gradeBg}">
+          <div class="text-sm">${gradeEmoji}</div>
           <div class="text-xs font-bold mt-0.5" style="color:${gradeColor}">${g.label}</div>
         </div>
       </div>
-      <div class="grid grid-cols-3 gap-2 mt-3">
-        <div class="bg-gray-50 rounded-xl p-2 text-center">
-          <p class="text-xs text-muted">RSI</p>
-          <p class="text-sm font-bold text-dark">${a.rsi}</p>
-          <p class="text-xs text-muted">${rsiStatus}</p>
+      <div class="grid grid-cols-3 gap-3 mt-4">
+        <div class="bg-gray-50 rounded-xl p-3 text-center">
+          <p class="text-xs text-muted mb-1">RSI</p>
+          <p class="text-base font-bold text-dark">${a.rsi}</p>
+          <p class="text-xs text-muted mt-0.5">${rsiStatus}</p>
         </div>
-        <div class="bg-gray-50 rounded-xl p-2 text-center">
-          <p class="text-xs text-muted">추세(ADX)</p>
-          <p class="text-sm font-bold text-dark">${a.adx}</p>
-          <p class="text-xs text-muted">${adxStatus}</p>
+        <div class="bg-gray-50 rounded-xl p-3 text-center">
+          <p class="text-xs text-muted mb-1">추세(ADX)</p>
+          <p class="text-base font-bold text-dark">${a.adx}</p>
+          <p class="text-xs text-muted mt-0.5">${adxStatus}</p>
         </div>
-        <div class="bg-gray-50 rounded-xl p-2 text-center">
-          <p class="text-xs text-muted">신뢰도</p>
-          <p class="text-sm font-bold" style="color:${relColor}">${a.reliability}등급</p>
-          <p class="text-xs text-muted">${relMap[a.reliability]||''}</p>
+        <div class="bg-gray-50 rounded-xl p-3 text-center">
+          <p class="text-xs text-muted mb-1">신뢰도</p>
+          <p class="text-base font-bold" style="color:${relColor}">${a.reliability}등급</p>
+          <p class="text-xs text-muted mt-0.5">${relMap[a.reliability]||''}</p>
         </div>
       </div>
-      <p class="text-xs text-muted text-center mt-2">▼ 눌러서 상세 보기</p>
+      <p class="text-xs text-muted text-center mt-3 flex items-center justify-center gap-1">
+        <span class="ana-arrow text-xs transition-transform duration-200">▼</span> 상세 보기
+      </p>
     </div>
 
-    <div>
-      <div class="px-5 pb-4 border-t border-divider pt-4">
-        <p class="text-xs font-semibold text-muted mb-2">📊 최근 60일 주가 흐름</p>
-        <div style="height:130px;"><canvas id="mini-chart-${idx}"></canvas></div>
-        <div class="flex gap-4 mt-2 text-xs text-muted">
+    <!-- 상세 영역 (기본 닫힘) -->
+    <div id="${detailId}" class="hidden">
+      <div class="px-6 pb-5 border-t border-divider pt-5">
+        <p class="text-xs font-semibold text-muted mb-3">📊 최근 60일 주가 흐름</p>
+        <div style="height:150px;"><canvas id="mini-chart-${idx}"></canvas></div>
+        <div class="flex gap-4 mt-3 text-xs text-muted">
           <span class="flex items-center gap-1"><span style="display:inline-block;width:14px;height:2px;background:#6c5ce7;border-radius:2px"></span>5일 평균</span>
           <span class="flex items-center gap-1"><span style="display:inline-block;width:14px;height:2px;background:#00b894;border-radius:2px"></span>20일 평균</span>
           <span class="flex items-center gap-1"><span style="display:inline-block;width:14px;height:2px;background:#fdcb6e;border-radius:2px"></span>60일 평균</span>
         </div>
       </div>
 
-      <div class="px-5 pb-4 grid grid-cols-2 gap-3">
-        <div class="rounded-2xl p-3 text-center" style="background:#fff8f6;border:1.5px solid #fab1a0">
+      <div class="px-6 pb-5 grid grid-cols-2 gap-4">
+        <div class="rounded-2xl p-4 text-center" style="background:#fff8f6;border:1.5px solid #fab1a0">
           <p class="text-xs text-muted font-medium mb-2">📅 단기 예상 (1주일)</p>
-          <p class="text-sm font-bold pos">최고 ${fmt(a.short_range.high)}원</p>
-          <p class="text-sm font-bold neg">최저 ${fmt(a.short_range.low)}원</p>
+          <p class="text-sm font-bold pos mt-1">최고 ${fmt(a.short_range.high)}원</p>
+          <p class="text-sm font-bold neg mt-1">최저 ${fmt(a.short_range.low)}원</p>
         </div>
-        <div class="rounded-2xl p-3 text-center" style="background:#f0f4ff;border:1.5px solid #a29bfe">
+        <div class="rounded-2xl p-4 text-center" style="background:#f0f4ff;border:1.5px solid #a29bfe">
           <p class="text-xs text-muted font-medium mb-2">📅 중기 예상 (1개월)</p>
-          <p class="text-sm font-bold pos">최고 ${fmt(a.mid_range.high)}원</p>
-          <p class="text-sm font-bold neg">최저 ${fmt(a.mid_range.low)}원</p>
+          <p class="text-sm font-bold pos mt-1">최고 ${fmt(a.mid_range.high)}원</p>
+          <p class="text-sm font-bold neg mt-1">최저 ${fmt(a.mid_range.low)}원</p>
         </div>
       </div>
 
-      <div class="px-5 pb-4">
-        <div class="flex justify-between text-xs text-muted mb-1">
+      <div class="px-6 pb-5">
+        <div class="flex justify-between text-xs text-muted mb-2">
           <span>52주 최저 ${fmt(a.w52.low)}원</span>
           <span class="font-bold text-dark">현재 ${a.w52.pos}% 위치</span>
           <span>52주 최고 ${fmt(a.w52.high)}원</span>
@@ -3096,8 +4217,8 @@ function renderAnalysisCard(a, idx) {
         </div>
       </div>
 
-      <div class="px-5 pb-5">
-        <div class="flex items-center justify-between cursor-pointer select-none mb-2 py-1 border-b border-divider"
+      <div class="px-6 pb-6">
+        <div class="flex items-center justify-between cursor-pointer select-none mb-3 py-2 border-b border-divider"
              onclick="const b=this.nextElementSibling;b.classList.toggle('hidden');this.querySelector('.ind-arrow').classList.toggle('rotate-180')">
           <p class="text-xs font-semibold text-muted flex items-center gap-1">🔍 지표별 신호 <span class="text-dark font-normal">(클릭하면 설명이 나와요)</span></p>
           <span class="ind-arrow text-muted text-xs transition-transform duration-200">▼</span>
@@ -3176,11 +4297,18 @@ const algoColors = {
   'strong_up':'#e17055','up':'#e17055','neutral':'#b2bec3','down':'#0984e3','strong_down':'#0984e3'
 };
 const algoMeta = [
-  { id:'A', color:'#6c5ce7', label:'종합형',    icon:'⚖️', desc:'여러 지표를 골고루 봐요' },
-  { id:'B', color:'#00b894', label:'추세추종형', icon:'📈', desc:'흐름이 올라가면 올라간다고 봐요' },
-  { id:'C', color:'#fd79a8', label:'역발상형',   icon:'🔄', desc:'너무 오른 건 내리고, 너무 내린 건 오른다고 봐요' },
-  { id:'D', color:'#fdcb6e', label:'모멘텀형',   icon:'🚀', desc:'최근 힘이 세면 계속 오른다고 봐요' },
+  { id:'A', color:'#6c5ce7', label:'종합형',       icon:'⚖️', desc:'8개 핵심 지표를 종합해 균형 잡힌 판단을 내려요', detail:'RSI, MACD, 이평선, 볼린저밴드, ADX, 거래량, 52주 위치, 다이버전스를 모두 고려합니다.' },
+  { id:'B', color:'#00b894', label:'추세추종형',   icon:'📈', desc:'상승/하락 흐름을 따라가며 추세의 힘을 측정해요', detail:'이평선 4단계 배열 + ADX 추세강도 + MACD 가속도로 추세장에서 강력합니다.' },
+  { id:'C', color:'#fd79a8', label:'역발상형',     icon:'🔄', desc:'과하게 빠진 종목의 반등 타이밍을 포착해요', detail:'RSI 극단값 + 볼린저밴드 하단 + 52주 저점을 분석해 반등 기회를 찾습니다.' },
+  { id:'D', color:'#fdcb6e', label:'모멘텀형',     icon:'🚀', desc:'최근 상승 에너지가 얼마나 강한지 측정해요', detail:'5일/20일/60일 수익률 + 거래량 폭증 + MACD 히스토그램 가속도를 분석합니다.' },
+  { id:'E', color:'#e17055', label:'거래량분석형', icon:'📦', desc:'거래량 흐름으로 큰 손(기관/외국인)의 움직임을 추적해요', detail:'OBV 추세, 거래량-가격 괴리, 매집/분산 지표로 숨은 수급을 파악합니다.' },
+  { id:'F', color:'#0984e3', label:'변동성분석형', icon:'🌊', desc:'가격 변동폭을 분석해 폭발적 움직임 전조를 감지해요', detail:'ATR 추세, 볼린저밴드 폭 수축/확장, 가격 안정성을 측정합니다.' },
+  { id:'G', color:'#00cec9', label:'지지저항형',   icon:'🧱', desc:'주요 가격 벽(지지선/저항선)과의 거리를 분석해요', detail:'최근 고점/저점, 이평선 지지/저항, 가격대 돌파 여부를 확인합니다.' },
+  { id:'H', color:'#e84393', label:'멀티타임형',   icon:'🔭', desc:'단기·중기·장기 시간대의 방향이 일치하는지 확인해요', detail:'5일/20일/60일 관점의 추세 방향을 비교해 정렬도를 측정합니다.' },
 ];
+// 알고리즘 활성화 설정 (localStorage 저장)
+let _enabledAlgos = JSON.parse(localStorage.getItem('enabledAlgos') || 'null') || ['A','B','C','D'];
+function saveAlgoSettings() { localStorage.setItem('enabledAlgos', JSON.stringify(_enabledAlgos)); }
 
 const gradeMeta = {
   strong_up:   { label:'강한 상승 예상', bg:'#fff1ee', border:'#e17055', text:'#c0392b', bar:'#e17055', emoji:'🔺🔺' },
@@ -3192,37 +4320,48 @@ const gradeMeta = {
 
 let compareCharts = {};
 
+function _findMeta(algoName) {
+  // algo name에서 "Algo X:" 패턴으로 ID 추출해서 algoMeta 매칭
+  const idMatch = algoName?.match(/Algo ([A-H]):/);
+  if (idMatch) return algoMeta.find(m => m.id === idMatch[1]);
+  return algoMeta[0];
+}
+
 function renderCompareCard(item, idx) {
   if (item.error) return `<div class="card p-5 text-coral"><b>${item.name}</b> — ${item.error}</div>`;
 
   const algos = item.algos || [];
+  const total = algos.length;
   const grades = algos.map(a => a.grade || 'neutral');
   const upCnt  = grades.filter(g => g.includes('up')).length;
   const dnCnt  = grades.filter(g => g.includes('down')).length;
+  const half   = Math.ceil(total / 2);
 
-  // 종합 의견
+  // 종합 의견 (동적 비율 기반)
   let verdict, verdictBg, verdictText, verdictEmoji;
-  if      (upCnt >= 3) { verdict='상승 쪽으로 기울어 있어요'; verdictBg='#fff1ee'; verdictText='#c0392b'; verdictEmoji='📈'; }
-  else if (dnCnt >= 3) { verdict='하락 쪽으로 기울어 있어요'; verdictBg='#e8f4ff'; verdictText='#0984e3'; verdictEmoji='📉'; }
-  else if (upCnt === dnCnt) { verdict='의견이 엇갈려요 — 관망 추천'; verdictBg='#f5f6fa'; verdictText='#636e72'; verdictEmoji='🤔'; }
-  else    { verdict='혼조세 — 뚜렷한 방향 없음'; verdictBg='#fffbf0'; verdictText='#e17055'; verdictEmoji='🟡'; }
+  if      (upCnt >= half + 1) { verdict=`${total}개 중 ${upCnt}개가 상승 — 상승 우세`; verdictBg='#fff1ee'; verdictText='#c0392b'; verdictEmoji='📈'; }
+  else if (dnCnt >= half + 1) { verdict=`${total}개 중 ${dnCnt}개가 하락 — 하락 우세`; verdictBg='#e8f4ff'; verdictText='#0984e3'; verdictEmoji='📉'; }
+  else if (upCnt === dnCnt)   { verdict=`의견이 반반 — 관망 추천`; verdictBg='#f5f6fa'; verdictText='#636e72'; verdictEmoji='🤔'; }
+  else    { verdict=`혼조세 (상승 ${upCnt} vs 하락 ${dnCnt}) — 뚜렷한 방향 없음`; verdictBg='#fffbf0'; verdictText='#e17055'; verdictEmoji='🟡'; }
 
-  // 합의 투표 아이콘 (4개 알고리즘 각각 한 표)
+  // 합의 투표 아이콘
+  const cols = Math.min(total, 4);
   const voteBar = algos.map((a, ai) => {
+    const meta = _findMeta(a.name);
     const m = gradeMeta[a.grade] || gradeMeta.neutral;
     const shortLabel = m.label.replace(' 예상','').replace(' (변화없음)','').replace('보합','보합');
     return `<div class="flex flex-col items-center gap-0.5 min-w-0">
-      <span class="text-base">${algoMeta[ai]?.icon}</span>
+      <span class="text-base">${meta?.icon||'📊'}</span>
       <span class="text-sm">${m.emoji}</span>
       <span class="text-xs font-semibold text-center leading-tight" style="color:${m.text};max-width:52px;word-break:keep-all">${shortLabel}</span>
-      <span class="text-xs text-muted">${algoMeta[ai]?.label}</span>
+      <span class="text-xs text-muted">${meta?.label||''}</span>
     </div>`;
   }).join('');
 
   // 알고리즘 카드들
   const algoCards = algos.map((a, ai) => {
-    if (a.error) return `<div class="rounded-xl border border-divider p-3 text-xs text-coral">${algoMeta[ai]?.label} 오류</div>`;
-    const meta = algoMeta[ai];
+    const meta = _findMeta(a.name);
+    if (a.error) return `<div class="rounded-xl border border-divider p-3 text-xs text-coral">${meta?.label||''} 오류</div>`;
     const gm   = gradeMeta[a.grade] || gradeMeta.neutral;
     const pct  = Math.round((a.score / a.max_score + 1) / 2 * 100);
 
@@ -3250,26 +4389,26 @@ function renderCompareCard(item, idx) {
     }).join('');
 
     const cardId = `algo-card-${idx}-${ai}`;
-    return `<div class="rounded-2xl border-2 overflow-hidden" style="border-color:${gm.border}">
+    return `<div class="rounded-2xl border-2 overflow-hidden h-full flex flex-col" style="border-color:${gm.border}">
       <!-- 헤더 (클릭 → 열고 닫기) -->
       <div class="flex items-center justify-between px-3 py-3 cursor-pointer select-none"
-           style="background:${gm.bg}"
+           style="background:${gm.bg};min-height:72px"
            onclick="const b=document.getElementById('${cardId}');b.classList.toggle('hidden');this.querySelector('.cmp-arrow').classList.toggle('rotate-180')">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">${meta.icon}</span>
-          <div>
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+          <span class="text-xl shrink-0">${meta.icon}</span>
+          <div class="min-w-0">
             <p class="font-bold text-sm text-dark">${meta.label}</p>
-            <p class="text-xs text-muted">${meta.desc}</p>
+            <p class="text-xs text-muted leading-tight">${meta.desc}</p>
           </div>
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <span class="text-xs font-bold px-2 py-1 rounded-lg text-white" style="background:${gm.bar}">${gm.emoji} ${gm.label}</span>
-          <span class="cmp-arrow text-muted text-xs transition-transform duration-200">▼</span>
+          <span class="cmp-arrow text-muted text-xs transition-transform duration-200 rotate-180">▼</span>
         </div>
       </div>
 
-      <!-- 본문 (기본 hidden) -->
-      <div id="${cardId}" class="hidden px-3 pb-3 space-y-3" style="background:${gm.bg}">
+      <!-- 본문 (기본 펼침 — 모든 카드 동일 상태로 시작) -->
+      <div id="${cardId}" class="px-3 pb-3 space-y-3 flex-1" style="background:${gm.bg}">
         <!-- 신뢰도 바 -->
         <div class="pt-2">
           <div class="flex justify-between text-xs text-muted mb-1">
@@ -3297,9 +4436,15 @@ function renderCompareCard(item, idx) {
           </div>
         </div>
 
+        <!-- 강점/약점 -->
+        ${a.strength || a.weakness ? `<div class="grid grid-cols-2 gap-2">
+          ${a.strength ? `<div class="bg-white rounded-lg px-2.5 py-2 border border-divider text-xs"><span class="text-green-600 font-bold">💪 강점</span><p class="text-muted mt-0.5">${a.strength}</p></div>` : ''}
+          ${a.weakness ? `<div class="bg-white rounded-lg px-2.5 py-2 border border-divider text-xs"><span class="text-orange-500 font-bold">⚠️ 약점</span><p class="text-muted mt-0.5">${a.weakness}</p></div>` : ''}
+        </div>` : ''}
+
         <!-- 지표 상세 -->
         <div class="bg-white rounded-xl border border-divider overflow-hidden">
-          <p class="text-xs font-semibold px-3 py-2 border-b border-divider" style="color:${meta.color}">🔍 세부 지표 — 무슨 기준으로 판단했나요?</p>
+          <p class="text-xs font-semibold px-3 py-2 border-b border-divider" style="color:${meta?.color||'#636e72'}">🔍 세부 지표 — 무슨 기준으로 판단했나요?</p>
           <div class="px-3">
             ${detailRows || '<p class="text-xs text-muted py-3">데이터 없음</p>'}
           </div>
@@ -3325,13 +4470,13 @@ function renderCompareCard(item, idx) {
         <div class="flex items-center gap-2 mb-3">
           <span class="text-xl">${verdictEmoji}</span>
           <div>
-            <p class="text-xs text-muted">4개 알고리즘 종합 의견</p>
+            <p class="text-xs text-muted">${total}개 알고리즘 종합 의견</p>
             <p class="text-sm font-bold" style="color:${verdictText}">${verdict}</p>
           </div>
           <span id="cmp-arrow-${idx}" class="ml-auto text-muted text-sm transition-transform duration-200">▼</span>
         </div>
         <!-- 투표 한 줄 (가로 정렬) -->
-        <div class="grid grid-cols-4 gap-2">
+        <div class="grid gap-2" style="grid-template-columns:repeat(${cols},1fr)">
           ${voteBar}
         </div>
       </div>
@@ -3340,7 +4485,7 @@ function renderCompareCard(item, idx) {
     <!-- 접히는 본문 -->
     <div class="cmp-body hidden" id="cmp-body-${idx}">
       <!-- 알고리즘 카드 그리드 -->
-      <div class="p-4 grid grid-cols-1 gap-3 sm:grid-cols-2 items-start">
+      <div class="p-4 grid grid-cols-1 gap-3 sm:grid-cols-2 ${total > 4 ? 'lg:grid-cols-2' : ''} items-stretch">
         ${algoCards}
       </div>
       <!-- 하단 주석 -->
@@ -3371,11 +4516,53 @@ function drawCompareCharts(compare) {
   });
 }
 
+function renderAlgoToggleList() {
+  const el = document.getElementById('algo-toggle-list');
+  if (!el) return;
+  el.innerHTML = algoMeta.map(m => {
+    const checked = _enabledAlgos.includes(m.id);
+    return `<label class="flex items-start gap-3 p-3 rounded-xl border ${checked ? 'border-accent bg-accent/5' : 'border-divider'} cursor-pointer hover:border-accent transition" id="algo-toggle-${m.id}">
+      <input type="checkbox" value="${m.id}" ${checked ? 'checked' : ''} onchange="onAlgoToggle(this)"
+        class="mt-0.5 accent-accent w-4 h-4 shrink-0 rounded">
+      <div class="min-w-0">
+        <div class="flex items-center gap-1.5 mb-0.5">
+          <span class="text-base">${m.icon}</span>
+          <span class="text-sm font-bold text-dark">${m.label}</span>
+          <span class="text-xs px-1.5 py-0.5 rounded-full font-mono font-bold" style="background:${m.color}20;color:${m.color}">${m.id}</span>
+        </div>
+        <p class="text-xs text-muted leading-snug">${m.desc}</p>
+        <p class="text-xs text-light leading-snug mt-0.5">${m.detail}</p>
+      </div>
+    </label>`;
+  }).join('');
+}
+function onAlgoToggle(cb) {
+  const id = cb.value;
+  if (cb.checked && !_enabledAlgos.includes(id)) _enabledAlgos.push(id);
+  else _enabledAlgos = _enabledAlgos.filter(x => x !== id);
+  saveAlgoSettings();
+  // 시각 업데이트
+  const label = document.getElementById('algo-toggle-' + id);
+  if (label) { label.classList.toggle('border-accent', cb.checked); label.classList.toggle('bg-accent/5', cb.checked); label.classList.toggle('border-divider', !cb.checked); }
+}
+function toggleAllAlgos(on) {
+  _enabledAlgos = on ? algoMeta.map(m => m.id) : [];
+  saveAlgoSettings();
+  renderAlgoToggleList();
+}
+function applyAlgoSettings() {
+  if (_enabledAlgos.length === 0) { alert('최소 1개 이상의 알고리즘을 선택해주세요.'); return; }
+  saveAlgoSettings();
+  window._compareLoaded = false;
+  loadCompare();
+}
+
 async function loadCompare() {
+  const n = _enabledAlgos.length;
   document.getElementById('compare-body').innerHTML =
-    '<div class="card p-8 text-center text-muted">4개 알고리즘 분석 중... (약 10~30초)</div>';
+    `<div class="card p-8 text-center text-muted">${n}개 알고리즘 분석 중... (약 10~30초)</div>`;
   try {
-    const res  = await fetch('/api/compare');
+    const res  = await fetch('/api/compare?algos=' + _enabledAlgos.join(','));
     const data = await res.json();
     _rawCompare = data;
     renderCompare(data);
@@ -3419,6 +4606,116 @@ async function hideStock(ticker, name) {
   if (_rawPortfolio) renderPortfolio(_rawPortfolio);
   showToast(`${name} 숨김 처리됨 — 알람 버튼 > 숨김 종목에서 복원 가능`);
   updateHiddenBadge();
+}
+
+// ── 종목 수정 ──────────────────────────────────────────
+let _editingHolding = null;  // {ticker, name, market, qty, avg_price, cur_price}
+
+function openEditHoldingModal(ticker, name, market, qty, avgPrice, curPrice) {
+  _editingHolding = { ticker, name, market, qty: Number(qty)||0, avg_price: Number(avgPrice)||0, cur_price: Number(curPrice)||0 };
+  document.getElementById('eh-name').textContent   = name;
+  document.getElementById('eh-ticker').textContent = ticker;
+  document.getElementById('eh-market').textContent = market === 'US' ? '🇺🇸 미국' : '🇰🇷 국내';
+  document.getElementById('eh-cur-price').textContent = curPrice ? Number(curPrice).toLocaleString() + '원' : '-';
+  document.getElementById('eh-qty').value = qty;
+  document.getElementById('eh-avg-price').value = Math.round(avgPrice);
+  document.getElementById('edit-holding-modal').classList.remove('hidden');
+  setTimeout(() => ehCalcTotal(), 50);
+  setTimeout(() => document.getElementById('eh-qty').focus(), 100);
+}
+
+function closeEditHoldingModal() {
+  document.getElementById('edit-holding-modal').classList.add('hidden');
+  _editingHolding = null;
+}
+
+function ehUseCurrentPrice() {
+  const cur = _editingHolding?.cur_price || 0;
+  document.getElementById('eh-avg-price').value = Math.round(cur);
+  ehCalcTotal();
+}
+
+function ehCalcTotal() {
+  if (!_editingHolding) return;
+  const qty = normalizeQty(document.getElementById('eh-qty').value);
+  const avg = parseFloat(document.getElementById('eh-avg-price').value) || 0;
+  const cur = _editingHolding.cur_price;
+  const cost = safeCost(qty, avg);
+  const value = safeCost(qty, cur);
+  const pnl = value - cost;
+  const pnlPct = cost > 0 ? (pnl / cost * 100) : 0;
+  const sign = pnl >= 0 ? '+' : '';
+
+  document.getElementById('eh-total-cost').textContent  = cost.toLocaleString() + '원';
+  document.getElementById('eh-total-value').textContent = value.toLocaleString() + '원';
+  const pnlEl = document.getElementById('eh-total-pnl');
+  pnlEl.textContent = `${sign}${pnl.toLocaleString()}원 (${sign}${pnlPct.toFixed(2)}%)`;
+  pnlEl.className = 'text-sm font-bold ' + (pnl > 0 ? 'pos' : (pnl < 0 ? 'neg' : 'text-dark'));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  ['eh-qty','eh-avg-price'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) ['input','keyup','change','paste'].forEach(evt => el.addEventListener(evt, ehCalcTotal));
+  });
+});
+
+async function submitEditHolding() {
+  if (!_editingHolding) return;
+  const qty = normalizeQty(document.getElementById('eh-qty').value);
+  const avg = parseFloat(document.getElementById('eh-avg-price').value);
+  const qtyEl = document.getElementById('eh-qty');
+  const avgEl = document.getElementById('eh-avg-price');
+  if (!qty || qty <= 0) {
+    if (qtyEl) { qtyEl.classList.add('border-coral'); qtyEl.focus(); setTimeout(()=>qtyEl.classList.remove('border-coral'), 2000); }
+    return;
+  }
+  if (!avg || avg <= 0) {
+    if (avgEl) { avgEl.classList.add('border-coral'); avgEl.focus(); setTimeout(()=>avgEl.classList.remove('border-coral'), 2000); }
+    return;
+  }
+
+  const newCost = safeCost(qty, avg);
+  // 기존 holdings 배열에서 해당 종목만 교체
+  const holdings = (_rawPortfolio?.holdings || []).map(h => {
+    if (h.ticker === _editingHolding.ticker) {
+      return { ...h, qty, cost: newCost };
+    }
+    return h;
+  });
+
+  // closeEditHoldingModal이 _editingHolding을 null로 만들기 전에 이름 캡처
+  const holdingName = _editingHolding.name;
+
+  try {
+    const res = await fetch('/api/upload-json', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ holdings })
+    });
+    const d = await res.json();
+    if (d.error) { alert('❌ ' + d.error); return; }
+    closeEditHoldingModal();
+    showToast(`✅ ${holdingName} 수정됨: ${formatQty(qty)}주 @${avg.toLocaleString()}원`);
+    refreshAll();
+  } catch(e) {
+    alert('저장 실패: ' + e.message);
+  }
+}
+
+async function deleteHolding(ticker, name) {
+  if (!confirm(`"${name}" 종목을 포트폴리오에서 삭제하시겠습니까?`)) return;
+  try {
+    const res = await fetch('/api/portfolio/delete', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ ticker })
+    });
+    const data = await res.json();
+    if (data.error) { showToast('❌ ' + data.error); return; }
+    showToast(`🗑 ${name} 삭제 완료`);
+    refreshAll();
+  } catch(e) {
+    showToast('❌ 삭제 실패: ' + e.message);
+  }
 }
 
 async function restoreStock(ticker) {
@@ -3486,14 +4783,70 @@ async function changeDataDir() {
 
 async function openDataFolderModal() {
   document.getElementById('data-folder-modal').classList.remove('hidden');
+  // 버전 표시
+  const vb = document.getElementById('df-version-badge');
+  if (vb) vb.textContent = _updateInfo?.current_version || document.getElementById('app-version-badge')?.textContent || '-';
   try {
     const res  = await fetch('/api/settings');
     const data = await res.json();
     document.getElementById('df-data-dir').textContent = data.data_dir || '-';
-    document.getElementById('df-token').textContent    = data.user_token || '-';
   } catch(e) {
     document.getElementById('df-data-dir').textContent = '불러오기 실패: ' + e.message;
   }
+  // 업데이트 진단 정보 자동 표시
+  refreshUpdateDiagnostic();
+}
+
+// 업데이트 진단 정보 표시 (F12 없이 확인 가능)
+async function refreshUpdateDiagnostic() {
+  const el = document.getElementById('upd-diagnostic');
+  if (!el) return;
+  el.innerHTML = '⏳ 진단 중...';
+  try {
+    const r = await fetch('/api/update/check');
+    const d = await r.json();
+    const skipped = localStorage.getItem('upd_skip_version') || '(없음)';
+    const lastShown = localStorage.getItem('upd_last_shown');
+    const lastShownStr = lastShown ? new Date(parseInt(lastShown)).toLocaleString('ko-KR') : '(없음)';
+    const notified = localStorage.getItem('upd_notified_version') || '(없음)';
+
+    const lines = [
+      `📡 데이터 소스: <b>${d.source || '(supabase)'}</b>`,
+      `📦 현재 버전: <b>${d.current_version || '?'}</b>`,
+      `🆕 최신 버전: <b style="color:${d.update_available?'#00b894':'#636e72'}">${d.latest_version || '없음'}</b>`,
+      `${d.update_available ? '✅ 업데이트 있음' : '⏸ 업데이트 없음'}`,
+      d.error ? `❌ 오류: ${d.error}` : '',
+      `🚫 건너뛴 버전: ${skipped}`,
+      `🕐 마지막 모달 표시: ${lastShownStr}`,
+      `🔔 알림 보낸 버전: ${notified}`,
+      d.download_url ? `📥 다운로드: <a href="${d.download_url}" target="_blank" class="text-accent underline">링크</a>` : '',
+    ].filter(x => x);
+    el.innerHTML = lines.join('<br>');
+  } catch(e) {
+    el.innerHTML = `❌ 진단 실패: ${e.message}<br>(서버 응답 안 함)`;
+  }
+}
+
+// 강제 업데이트 체크 (모든 캐시 무시)
+async function forceUpdateCheck() {
+  showToast('🔄 GitHub에서 최신 버전 확인 중...');
+  // 캐시 초기화
+  _updateInfo = null;
+  // 진단 정보 새로고침
+  refreshUpdateDiagnostic();
+  // 강제 체크
+  await checkForUpdate(false);
+}
+
+// 업데이트 캐시·상태 완전 초기화
+function resetUpdateState() {
+  if (!confirm('업데이트 관련 모든 캐시를 초기화합니다. 계속하시겠습니까?')) return;
+  localStorage.removeItem('upd_skip_version');
+  localStorage.removeItem('upd_last_shown');
+  localStorage.removeItem('upd_notified_version');
+  _updateInfo = null;
+  showToast('✅ 캐시 초기화 완료. 다시 [업데이트 확인]을 눌러주세요.');
+  setTimeout(() => refreshUpdateDiagnostic(), 500);
 }
 function closeDataFolderModal() {
   document.getElementById('data-folder-modal').classList.add('hidden');
@@ -3501,22 +4854,649 @@ function closeDataFolderModal() {
 async function openDataFolder() {
   try { await fetch('/api/open-data-folder'); } catch(e) { console.error(e); }
 }
-function copyToken() {
-  const tok = document.getElementById('df-token').textContent;
-  navigator.clipboard.writeText(tok).then(() => showToast('🔑 접속 코드가 복사됐습니다'));
-}
-async function applyToken() {
-  const tok = document.getElementById('df-token-input').value.trim();
-  if (tok.length !== 36 || tok.split('-').length !== 5) {
-    showToast('❌ 잘못된 코드 형식입니다'); return;
+// ── 크로스 디바이스 동기화 ──
+let _syncCode = localStorage.getItem('sync_code') || '';
+
+// ══════════════════════════════════════════════════════════
+// 자동 업데이트 시스템
+// ══════════════════════════════════════════════════════════
+let _updateInfo = null;
+
+async function checkForUpdate(silent = true) {
+  try {
+    const res = await fetch('/api/update/check');
+    const d = await res.json();
+    const prevVersion = _updateInfo?.latest_version || '';
+    _updateInfo = d;
+
+    // 버전 배지 업데이트
+    const verBadge = document.getElementById('app-version-badge');
+    if (verBadge && d.current_version) verBadge.textContent = d.current_version;
+
+    if (d.update_available) {
+      // 업데이트 배지: 단순 "업데이트"만 표시 (버전 번호는 현재 설치본만 보이게)
+      document.getElementById('update-badge').classList.remove('hidden');
+      const ub = document.getElementById('update-badge-text');
+      if (ub) ub.textContent = '🔔 업데이트';
+      const ubBtn = document.getElementById('update-badge');
+      if (ubBtn) ubBtn.title = `클릭하여 업데이트 (${d.latest_version || '새 버전'})`;
+
+      // Windows 토스트 알림 — 새 버전 감지 OR 이전에 알린 적 없을 때
+      const notifiedVer = localStorage.getItem('upd_notified_version') || '';
+      const isNewDetection = (prevVersion !== d.latest_version) || (notifiedVer !== d.latest_version);
+      if (isNewDetection && Notification.permission === 'granted') {
+        try {
+          const n = new Notification(`🚀 새 업데이트: ${d.latest_version}`, {
+            body: (d.release_notes || '업데이트가 도착했습니다').slice(0, 140),
+            icon: '/static/favicon.ico',
+            tag: 'app-update',
+            requireInteraction: d.is_mandatory === true,
+          });
+          n.onclick = () => { window.focus?.(); openUpdateModal(); n.close(); };
+          playNotifySound?.();
+        } catch(e) { console.warn('토스트 알림 실패:', e); }
+        localStorage.setItem('upd_notified_version', d.latest_version);
+      }
+
+      // 모달 자동 표시 조건: 건너뛰기한 버전이 아니고, 6시간 경과
+      const skipped = localStorage.getItem('upd_skip_version') || '';
+      if (!silent || (d.latest_version !== skipped) || d.is_mandatory) {
+        const last = parseInt(localStorage.getItem('upd_last_shown') || '0');
+        const now = Date.now();
+        if (!silent || d.is_mandatory || now - last > 6*3600*1000) {
+          localStorage.setItem('upd_last_shown', String(now));
+          openUpdateModal();
+        }
+      }
+    } else {
+      document.getElementById('update-badge').classList.add('hidden');
+      if (!silent) {
+        // 최신 버전 전용 모달 표시
+        showLatestVersionDialog(d);
+      }
+    }
+    return d;
+  } catch(e) {
+    console.error('checkForUpdate:', e);
+    if (!silent) showToast('❌ 업데이트 확인 실패');
+    return null;
   }
-  const res = await fetch('/api/set-token', {
-    method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ token: tok })
+}
+
+// 주기적 업데이트 체크 — 실행 중에도 1시간마다
+function startUpdatePolling() {
+  // 알림 권한 요청 (한 번만)
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission().catch(()=>{});
+  }
+  // 1시간마다 체크
+  setInterval(() => checkForUpdate(true), 60 * 60 * 1000);
+  // 창 포커스될 때도 체크 (앱 장시간 유지 대비)
+  let lastFocusCheck = Date.now();
+  window.addEventListener('focus', () => {
+    const now = Date.now();
+    if (now - lastFocusCheck > 30 * 60 * 1000) {  // 30분 이상 blur였으면
+      lastFocusCheck = now;
+      checkForUpdate(true);
+    }
   });
-  const data = await res.json();
-  if (data.ok) { showToast('✅ 코드 적용됨 — 새로고침합니다'); setTimeout(() => location.reload(), 1200); }
-  else showToast('❌ ' + (data.error || '오류'));
+}
+
+function showLatestVersionDialog(d) {
+  // 모달 헤더를 '최신 버전' 로 변경, 다운로드 버튼 숨김
+  document.getElementById('upd-current').textContent = d.current_version || '-';
+  document.getElementById('upd-latest').textContent = d.current_version || '-';
+  document.getElementById('upd-notes').innerHTML =
+    '<div class="text-center py-6">' +
+    '<div class="text-5xl mb-3">✨</div>' +
+    `<p class="text-base font-bold text-dark mb-1">최신 버전 사용 중</p>` +
+    `<p class="text-xs text-muted">현재 <b class="text-accent">${d.current_version}</b>이(가) 최신 버전입니다.</p>` +
+    `<p class="text-xs text-muted mt-2">새 업데이트가 있을 때 자동으로 알림을 보내드립니다.</p>` +
+    '</div>';
+  document.getElementById('upd-mandatory').classList.add('hidden');
+  document.getElementById('upd-progress').classList.add('hidden');
+  // 버튼 조정
+  document.getElementById('upd-install-btn').classList.add('hidden');
+  document.getElementById('upd-manual-link').classList.add('hidden');
+  const laterBtn = document.getElementById('upd-later-btn');
+  laterBtn.classList.remove('hidden');
+  laterBtn.disabled = false;
+  laterBtn.textContent = '확인';
+  laterBtn.className = 'flex-1 btn-primary py-2.5 text-sm';
+  document.getElementById('update-modal').classList.remove('hidden');
+}
+
+function openUpdateModal() {
+  // _updateInfo 없으면 먼저 체크
+  if (!_updateInfo) { checkForUpdate(false); return; }
+  const d = _updateInfo;
+
+  // ── 모든 모달 요소 항상 초기화 (이전 상태 잔존 방지) ──
+  const installBtn = document.getElementById('upd-install-btn');
+  const manualLink = document.getElementById('upd-manual-link');
+  const laterBtn = document.getElementById('upd-later-btn');
+  const mand = document.getElementById('upd-mandatory');
+  const prog = document.getElementById('upd-progress');
+  const progBar = document.getElementById('upd-progress-bar');
+
+  // 진행상태 초기화
+  if (prog) prog.classList.add('hidden');
+  if (progBar) progBar.style.width = '0%';
+
+  // 최신 버전이면 별도 다이얼로그
+  if (!d.update_available) {
+    showLatestVersionDialog(d);
+    return;
+  }
+
+  // ── 업데이트 가능: 모든 버튼 강제 표시 ──
+  if (installBtn) {
+    installBtn.classList.remove('hidden');
+    installBtn.style.display = '';  // inline style도 리셋
+    installBtn.disabled = false;
+    installBtn.textContent = '⬇️ 지금 업데이트';
+    installBtn.className = 'flex-1 btn-primary py-2.5 text-sm';
+  }
+  if (manualLink) {
+    manualLink.classList.remove('hidden');
+    manualLink.style.display = '';
+    manualLink.style.pointerEvents = 'auto';
+    manualLink.href = d.download_url || '#';
+    manualLink.className = 'px-4 py-2.5 text-sm font-semibold text-accent border border-accent rounded-xl hover:bg-purple-50 transition text-center';
+  }
+  if (laterBtn) {
+    laterBtn.classList.remove('hidden');
+    laterBtn.style.display = '';
+    laterBtn.disabled = false;
+    laterBtn.textContent = '나중에';
+    laterBtn.className = 'flex-1 py-2.5 text-sm font-medium text-muted border border-divider rounded-xl hover:bg-gray-50 transition';
+  }
+
+  // 텍스트 업데이트
+  document.getElementById('upd-current').textContent = d.current_version || '-';
+  document.getElementById('upd-latest').textContent = d.latest_version || '-';
+  document.getElementById('upd-notes').textContent = d.release_notes || '(업데이트 상세 내용 없음)';
+
+  // 필수 업데이트 처리
+  if (d.is_mandatory) {
+    if (mand) mand.classList.remove('hidden');
+    if (laterBtn) {
+      laterBtn.classList.add('hidden');
+      laterBtn.disabled = true;
+    }
+  } else {
+    if (mand) mand.classList.add('hidden');
+  }
+
+  document.getElementById('update-modal').classList.remove('hidden');
+}
+
+function closeUpdateModal() {
+  if (_updateInfo?.is_mandatory) return;  // 필수 업데이트는 닫기 불가
+  // 이 버전 건너뛰기
+  if (_updateInfo?.latest_version) {
+    localStorage.setItem('upd_skip_version', _updateInfo.latest_version);
+  }
+  document.getElementById('update-modal').classList.add('hidden');
+}
+
+async function installUpdate() {
+  // ZIP 우선, 없으면 .exe 인스톨러로 폴백
+  const zipUrl = _updateInfo?.zip_url;
+  const exeUrl = _updateInfo?.download_url;
+  const targetUrl = zipUrl || exeUrl;
+  const useZip = !!zipUrl;
+  const endpoint = useZip ? '/api/update/install-zip' : '/api/update/install';
+
+  if (!targetUrl) { showToast('❌ 다운로드 URL 없음', 'error'); return; }
+
+  const btn = document.getElementById('upd-install-btn');
+  const laterBtn = document.getElementById('upd-later-btn');
+  const manualLink = document.getElementById('upd-manual-link');
+  const prog = document.getElementById('upd-progress');
+  const bar = document.getElementById('upd-progress-bar');
+  const msg = document.getElementById('upd-progress-msg');
+
+  // 버튼 상태 업데이트 (사용자가 닫지 못하게)
+  btn.disabled = true;
+  btn.textContent = useZip ? '⏳ ZIP 다운로드 중...' : '⏳ 다운로드 중...';
+  if (laterBtn) laterBtn.disabled = true;
+  if (manualLink) manualLink.style.pointerEvents = 'none';
+
+  prog.classList.remove('hidden');
+  const sizeStr = useZip
+    ? `약 ${Math.round((_updateInfo.zip_size||50000000)/1024/1024)}MB`
+    : `약 ${Math.round((_updateInfo.installer_size||70000000)/1024/1024)}MB`;
+  msg.textContent = `📥 ${useZip?'ZIP':'인스톨러'} 다운로드 중... (${sizeStr})`;
+  bar.style.width = '15%';
+
+  // 진행 표시 애니메이션 (서버 다운로드 동안 시각적 피드백)
+  let pct = 15;
+  const progInterval = setInterval(() => {
+    if (pct < 80) {
+      pct += 3;
+      bar.style.width = pct + '%';
+    }
+  }, 800);
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ url: targetUrl })
+    });
+    clearInterval(progInterval);
+    const d = await res.json();
+    if (!d.ok) {
+      // ZIP 권한 거부 → 인스톨러로 자동 폴백
+      if (d.use_legacy && useZip && exeUrl) {
+        msg.innerHTML = '⚠️ ZIP 방식 권한 거부 (Program Files 설치)<br>👉 인스톨러 모드로 자동 전환 중...';
+        showToast('💡 권한 부족 → 인스톨러 모드로 자동 전환');
+        const fbRes = await fetch('/api/update/install', {
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ url: exeUrl })
+        });
+        const fbD = await fbRes.json();
+        if (fbD.ok) {
+          msg.innerHTML = `✅ 인스톨러 다운로드 완료 (${fbD.size_mb}MB)<br>🔔 UAC 창에서 [예]를 눌러주세요!`;
+          showToast('✅ 인스톨러 실행됨 — UAC [예] 클릭하세요');
+          return;
+        } else {
+          msg.innerHTML = `<div style="color:#e17055">❌ 인스톨러 폴백 실패: ${fbD.error||'?'}</div>`;
+          showToast('❌ ' + (fbD.error || '폴백 실패'), 'error');
+        }
+      }
+      prog.classList.add('hidden');
+      btn.disabled = false;
+      btn.textContent = '⬇️ 지금 업데이트';
+      if (laterBtn) laterBtn.disabled = false;
+      if (manualLink) manualLink.style.pointerEvents = 'auto';
+      // 상세 에러를 모달에 명시적으로 표시
+      const errMsg = d.error || '업데이트 실패';
+      const installPath = d.install_dir ? `\n📂 설치 경로: ${d.install_dir}` : '';
+      prog.classList.remove('hidden');
+      msg.innerHTML = `<div style="color:#e17055;font-size:11px;white-space:pre-wrap;text-align:left">❌ ${errMsg}${installPath}</div>`;
+      showToast('❌ ' + errMsg, 'error');
+      return;
+    }
+    bar.style.width = '100%';
+    const methodLabel = useZip ? 'ZIP (UAC 없음)' : '인스톨러';
+    msg.innerHTML = `✅ <b>${d.size_mb}MB</b> 다운로드 완료!<br>${methodLabel} 자동 적용 시작...`;
+
+    // 카운트다운 표시
+    let countdown = 3;
+    const countdownInterval = setInterval(() => {
+      countdown -= 1;
+      if (countdown > 0) {
+        const hint = useZip
+          ? '<span class="text-xs">압축 해제 후 자동 재시작됩니다 (UAC 불필요)</span>'
+          : '<span class="text-xs">UAC 창이 뜨면 [예]를 눌러주세요</span>';
+        msg.innerHTML = `⏳ <b>${countdown}초 후</b> 앱이 종료됩니다.<br>${hint}`;
+      } else {
+        clearInterval(countdownInterval);
+        msg.innerHTML = '🔄 자동 패치 진행 중... 잠시만 기다려주세요.';
+      }
+    }, 1000);
+
+    showToast(`✅ ${d.size_mb}MB 다운로드 완료 — 자동 패치 시작 (${methodLabel})`);
+  } catch(e) {
+    clearInterval(progInterval);
+    prog.classList.add('hidden');
+    btn.disabled = false;
+    btn.textContent = '⬇️ 지금 업데이트';
+    if (laterBtn) laterBtn.disabled = false;
+    if (manualLink) manualLink.style.pointerEvents = 'auto';
+    showToast('❌ 오류: ' + e.message + ' (수동 다운로드 링크 사용 가능)', 'error');
+  }
+}
+
+async function syncInit() {
+  const badge = document.getElementById('sync-status-badge');
+  try {
+    const r = await fetch('/api/sync/status');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    if (d.enabled) {
+      badge.textContent = '● 연결됨';
+      badge.className = 'text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700';
+      badge.title = '클라우드 서버 정상';
+    } else {
+      badge.textContent = '● 미설정';
+      badge.className = 'text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-600';
+      badge.title = '클라우드 동기화가 비활성 상태입니다';
+    }
+    // 기존 코드가 있으면 표시
+    if (_syncCode) {
+      document.getElementById('sync-no-code').classList.add('hidden');
+      document.getElementById('sync-has-code').classList.remove('hidden');
+      document.getElementById('sync-my-code').textContent = _syncCode;
+    }
+  } catch(e) {
+    if (badge) {
+      badge.textContent = '● 오프라인';
+      badge.className = 'text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500';
+      badge.title = '서버에 연결할 수 없습니다: ' + (e.message || e);
+    }
+    console.error('syncInit:', e);
+  }
+}
+
+async function syncGenerateCode() {
+  const btn = document.getElementById('sync-gen-btn');
+  btn.disabled = true; btn.textContent = '⏳ 업로드 중...';
+  try {
+    const r = await fetch('/api/sync/generate-code', { method: 'POST' });
+    const d = await r.json();
+    if (d.ok) {
+      _syncCode = d.code;
+      localStorage.setItem('sync_code', d.code);
+      document.getElementById('sync-no-code').classList.add('hidden');
+      document.getElementById('sync-has-code').classList.remove('hidden');
+      document.getElementById('sync-my-code').textContent = d.code;
+      showToast('✅ 접속코드 생성 완료: ' + d.code);
+    } else {
+      showToast('❌ ' + (d.error || '생성 실패'));
+    }
+  } catch(e) { showToast('❌ 서버 연결 실패'); }
+  finally { btn.disabled = false; btn.textContent = '📤 접속코드 생성 (업로드)'; }
+}
+
+function syncCopyCode() {
+  const code = document.getElementById('sync-my-code').textContent;
+  navigator.clipboard.writeText(code).then(() => showToast('🔑 접속코드 복사됨: ' + code));
+}
+
+async function syncUploadData() {
+  if (!_syncCode) { showToast('❌ 접속코드가 없습니다'); return; }
+  const btn = document.getElementById('sync-upload-btn');
+  btn.disabled = true; btn.textContent = '⏳ 업로드 중...';
+  try {
+    const r = await fetch('/api/sync/upload', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ code: _syncCode })
+    });
+    const d = await r.json();
+    if (d.ok) showToast('✅ 클라우드 데이터 업데이트 완료');
+    else showToast('❌ ' + (d.error || '업로드 실패'));
+  } catch(e) { showToast('❌ 서버 연결 실패'); }
+  finally { btn.disabled = false; btn.textContent = '🔄 현재 데이터로 업데이트'; }
+}
+
+async function syncDownloadData() {
+  const code = document.getElementById('sync-input-code').value.trim().toUpperCase();
+  if (!code || code.length < 4) { showToast('❌ 접속코드를 입력하세요'); return; }
+  const btn = document.getElementById('sync-down-btn');
+  btn.disabled = true; btn.textContent = '⏳ 서버 확인 중...';
+  try {
+    // 1) 서버 상태 사전 확인
+    const statusRes = await fetch('/api/sync/status');
+    const statusData = await statusRes.json();
+    if (!statusData.enabled) {
+      showToast('❌ 클라우드 동기화 서버가 비활성 상태입니다. 네트워크/설정을 확인하세요.');
+      return;
+    }
+
+    // 2) 다운로드 실행
+    btn.textContent = '⏳ 불러오는 중...';
+    const r = await fetch('/api/sync/download', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ code: code })
+    });
+    const d = await r.json();
+    if (d.ok) {
+      _syncCode = code;
+      localStorage.setItem('sync_code', code);
+      showToast(`✅ 데이터 불러오기 완료 (종목 ${d.holdings_count}개)`);
+      setTimeout(() => location.reload(), 1500);
+    } else {
+      const msg = d.error || '불러오기 실패';
+      // 상세 에러 힌트
+      if (r.status === 404 || msg.includes('찾을 수 없')) {
+        showToast(`❌ 접속코드 "${code}"를 찾을 수 없습니다. 코드를 정확히 입력했는지 확인하세요.`);
+      } else if (r.status >= 500) {
+        showToast('❌ 서버 오류: ' + msg);
+      } else {
+        showToast('❌ ' + msg);
+      }
+    }
+  } catch(e) {
+    showToast('❌ 서버 연결 실패: ' + (e.message || '네트워크 오류'));
+  }
+  finally { btn.disabled = false; btn.textContent = '📥 불러오기'; }
+}
+
+// ── 종목 수동 추가 ──
+let _maSelected = null; // { name, ticker, market, price }
+
+function openManualAddModal() {
+  _maSelected = null;
+  document.getElementById('manual-add-modal').classList.remove('hidden');
+  document.getElementById('ma-step1').classList.remove('hidden');
+  document.getElementById('ma-step2').classList.add('hidden');
+  document.getElementById('ma-search').value = '';
+  document.getElementById('ma-search-results').innerHTML = '';
+  setTimeout(() => document.getElementById('ma-search').focus(), 100);
+}
+function closeManualAddModal() { document.getElementById('manual-add-modal').classList.add('hidden'); }
+function maBackToSearch() {
+  _maSelected = null;
+  document.getElementById('ma-step1').classList.remove('hidden');
+  document.getElementById('ma-step2').classList.add('hidden');
+  document.getElementById('ma-search').focus();
+}
+
+async function maDoSearch() {
+  const q = document.getElementById('ma-search').value.trim();
+  if (!q) return;
+  const el = document.getElementById('ma-search-results');
+  el.innerHTML = '<p class="text-xs text-muted text-center py-3">검색 중...</p>';
+  try {
+    const res = await fetch('/api/search?q=' + encodeURIComponent(q));
+    const data = await res.json();
+    const rows = data.results || [];
+    if (!rows.length) { el.innerHTML = '<p class="text-xs text-muted text-center py-3">검색 결과 없음</p>'; return; }
+    const held = new Set((_rawPortfolio?.holdings||[]).map(h=>h.ticker));
+    el.innerHTML = rows.slice(0, 10).map(r => {
+      const mkt = r.market === 'US' ? '🇺🇸' : '🇰🇷';
+      const isHeld = held.has(r.ticker);
+      return `<div class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 cursor-pointer transition border border-transparent hover:border-accent"
+                   onclick="maSelectStock('${r.ticker}','${(r.name||'').replace(/'/g,"\\'")}','${r.market}',${r.price_krw||0},${r.change_pct||0},'${r.market_cap||''}')">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm font-bold text-dark">${r.name}</span>
+            <span class="text-xs text-light">${r.ticker}</span>
+            <span class="text-xs">${mkt}</span>
+            ${isHeld ? '<span class="text-xs px-1.5 py-0.5 rounded-full bg-green-100 text-green-700 font-medium">보유중</span>' : ''}
+          </div>
+          ${r.sector ? `<p class="text-xs text-muted truncate">${r.sector}</p>` : ''}
+        </div>
+        <div class="text-right shrink-0">
+          ${r.price_krw ? `<p class="text-xs font-bold text-dark">${Number(r.price_krw).toLocaleString()}원</p>` : ''}
+          ${r.change_pct !== undefined ? `<p class="text-xs font-medium ${r.change_pct>=0?'pos':'neg'}">${r.change_pct>=0?'+':''}${r.change_pct}%</p>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { el.innerHTML = `<p class="text-xs text-coral text-center py-3">${e.message}</p>`; }
+}
+
+function maSelectStock(ticker, name, market, price, changePct, cap) {
+  price = parseFloat(price) || 0;
+  _maSelected = { ticker, name, market, price };
+  document.getElementById('ma-step1').classList.add('hidden');
+  document.getElementById('ma-step2').classList.remove('hidden');
+  document.getElementById('ma-sel-name').textContent = name;
+  document.getElementById('ma-sel-ticker').textContent = ticker;
+  document.getElementById('ma-sel-market').textContent = market === 'US' ? '🇺🇸 미국' : '🇰🇷 국내';
+  document.getElementById('ma-sel-price').textContent = price ? Number(price).toLocaleString() + '원' : '-';
+  const chEl = document.getElementById('ma-sel-change');
+  if (changePct !== undefined) {
+    chEl.textContent = (changePct >= 0 ? '+' : '') + changePct + '%';
+    chEl.className = 'text-sm font-bold ' + (changePct >= 0 ? 'pos' : 'neg');
+  } else { chEl.textContent = '-'; }
+  const capNum = parseFloat(cap);
+  let capStr = '-';
+  if (capNum > 1e12) capStr = (capNum/1e12).toFixed(1) + '조$';
+  else if (capNum > 1e8) capStr = (capNum/1e8).toFixed(0) + '억$';
+  else if (capNum > 0) capStr = capNum.toLocaleString();
+  document.getElementById('ma-sel-cap').textContent = capStr;
+  // 초기화: 수량 비우고, 매수가는 현재가로 기본값 설정 (사용자가 수정 가능)
+  document.getElementById('ma-qty').value = '';
+  document.getElementById('ma-price').value = price ? price : '';
+  document.getElementById('ma-cur-price-hint').textContent = price ? Number(price).toLocaleString() + '원' : '-';
+  document.getElementById('ma-total-cost').textContent = '0원';
+  document.getElementById('ma-total-value').textContent = '0원';
+  document.getElementById('ma-total-pnl').textContent = '0원 (0%)';
+  document.getElementById('ma-total-pnl').className = 'text-sm font-bold text-dark';
+  // 모드: US 시장이면 소수점 매수 기본 (조각투자 흔함), KR이면 정수 매수
+  maSetMode(market === 'US' ? 'frac' : 'int');
+  // 에러 영역 초기화
+  const errEl = document.getElementById('ma-err');
+  if (errEl) { errEl.classList.add('hidden'); errEl.textContent = ''; }
+  const qtyErr = document.getElementById('ma-qty-err');
+  if (qtyErr) { qtyErr.classList.add('hidden'); qtyErr.textContent = ''; }
+  setTimeout(() => document.getElementById('ma-qty').focus(), 100);
+}
+
+function maUseCurrentPrice() {
+  const cur = parseFloat(_maSelected?.price) || 0;
+  document.getElementById('ma-price').value = cur || '';
+  maCalcTotal();
+}
+
+// ── 매수 모드 전환: 정수(int) ↔ 소수점(frac) ──
+let _maMode = 'int';
+function maSetMode(mode) {
+  _maMode = mode;
+  const intBtn  = document.getElementById('ma-mode-int');
+  const fracBtn = document.getElementById('ma-mode-frac');
+  const qtyEl   = document.getElementById('ma-qty');
+  const hintEl  = document.getElementById('ma-qty-hint');
+  if (!intBtn || !fracBtn || !qtyEl) return;
+  if (mode === 'int') {
+    intBtn.className = 'flex-1 py-1.5 rounded-lg font-semibold bg-white text-dark shadow-sm';
+    fracBtn.className = 'flex-1 py-1.5 rounded-lg font-semibold text-muted';
+    qtyEl.step = '1';
+    qtyEl.placeholder = '예: 10';
+    if (hintEl) hintEl.textContent = '(정수)';
+    // 정수 모드에서 기존 소수점 값이 있으면 정리
+    const cur = parseFloat(qtyEl.value);
+    if (cur && cur % 1 !== 0) qtyEl.value = Math.floor(cur);
+  } else {
+    fracBtn.className = 'flex-1 py-1.5 rounded-lg font-semibold bg-white text-dark shadow-sm';
+    intBtn.className  = 'flex-1 py-1.5 rounded-lg font-semibold text-muted';
+    qtyEl.step = '0.0001';
+    qtyEl.placeholder = '예: 0.5, 0.123';
+    if (hintEl) hintEl.innerHTML = '(소수점 8자리까지 — 조각투자/해외 분할매수)';
+  }
+  // 입력값 검증 갱신
+  maValidateQty();
+  maCalcTotal();
+}
+
+function maValidateQty() {
+  const qtyEl = document.getElementById('ma-qty');
+  const errEl = document.getElementById('ma-qty-err');
+  if (!qtyEl || !errEl) return true;
+  const raw = qtyEl.value.trim();
+  errEl.classList.add('hidden');
+  errEl.textContent = '';
+  if (!raw) return true;  // 빈 값은 submit에서 처리
+  const n = parseFloat(raw);
+  if (!isFinite(n) || n <= 0) {
+    errEl.textContent = '0보다 큰 숫자를 입력하세요';
+    errEl.classList.remove('hidden');
+    return false;
+  }
+  if (_maMode === 'int' && n % 1 !== 0) {
+    errEl.textContent = '소수점 매수는 위쪽 "소수점 매수" 탭으로 전환하세요';
+    errEl.classList.remove('hidden');
+    return false;
+  }
+  return true;
+}
+
+function maCalcTotal() {
+  const qtyEl = document.getElementById('ma-qty');
+  const prEl  = document.getElementById('ma-price');
+  if (!qtyEl || !prEl) return;
+  const qty    = normalizeQty(qtyEl.value);
+  const buyPr  = parseFloat(prEl.value) || 0;
+  const curPr  = parseFloat(_maSelected?.price) || 0;
+  const cost   = safeCost(qty, buyPr);            // 총 매수금액
+  const value  = safeCost(qty, curPr);            // 현재 평가금액
+  const pnl    = value - cost;
+  const pnlPct = cost > 0 ? (pnl / cost * 100) : 0;
+
+  document.getElementById('ma-total-cost').textContent  = cost  ? cost.toLocaleString()  + '원' : '0원';
+  document.getElementById('ma-total-value').textContent = value ? value.toLocaleString() + '원' : '0원';
+  const pnlEl = document.getElementById('ma-total-pnl');
+  const sign = pnl >= 0 ? '+' : '';
+  pnlEl.textContent = `${sign}${pnl.toLocaleString()}원 (${sign}${pnlPct.toFixed(2)}%)`;
+  pnlEl.className = 'text-sm font-bold ' + (pnl > 0 ? 'pos' : (pnl < 0 ? 'neg' : 'text-dark'));
+}
+// 실시간 반영을 위한 이벤트 리스너 (DOM 로드 후)
+document.addEventListener('DOMContentLoaded', function() {
+  ['ma-qty', 'ma-price'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) ['input','keyup','change','paste'].forEach(evt => el.addEventListener(evt, maCalcTotal));
+  });
+  const qtyEl = document.getElementById('ma-qty');
+  if (qtyEl) ['input','keyup','change','paste'].forEach(evt => qtyEl.addEventListener(evt, maValidateQty));
+});
+
+async function submitManualAdd() {
+  const errEl = document.getElementById('ma-err');
+  const showErr = (msg, focusId) => {
+    if (errEl) { errEl.textContent = msg; errEl.classList.remove('hidden'); }
+    if (focusId) {
+      const el = document.getElementById(focusId);
+      if (el) { el.classList.add('border-coral'); el.focus(); setTimeout(()=>el.classList.remove('border-coral'), 2000); }
+    }
+  };
+  if (errEl) { errEl.classList.add('hidden'); errEl.textContent = ''; }
+  if (!_maSelected) { showErr('종목을 먼저 검색해 선택해주세요'); return; }
+  if (!maValidateQty()) { document.getElementById('ma-qty')?.focus(); return; }
+  const qty   = normalizeQty(document.getElementById('ma-qty').value);
+  const buyPr = parseFloat(document.getElementById('ma-price').value);
+  const buyDate = document.getElementById('ma-date').value;
+  if (!qty || qty <= 0) {
+    const hint = _maMode === 'frac' ? '예: 0.5, 0.123' : '예: 10';
+    showErr(`보유 수량을 입력해주세요 (${hint})`, 'ma-qty'); return;
+  }
+  if (_maMode === 'int' && qty % 1 !== 0) {
+    showErr('현재 정수 매수 모드입니다. 위 "소수점 매수" 탭으로 전환하세요', 'ma-qty'); return;
+  }
+  if (!buyPr || buyPr <= 0) { showErr('매수 단가를 입력해주세요', 'ma-price'); return; }
+  const { name, ticker, market } = _maSelected;
+  const cost = safeCost(qty, buyPr);
+  try {
+    // 1. 포트폴리오 holdings 추가
+    const holdings = (_rawPortfolio?.holdings || []).concat([{ name, ticker, market, qty, cost }]);
+    const res = await fetch('/api/upload-json', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ holdings })
+    });
+    const data = await res.json();
+    if (data.error) { alert(data.error); return; }
+    // 2. 매수일 입력 시 거래내역에도 기록
+    if (buyDate) {
+      try {
+        await fetch('/api/transaction', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            type:'buy', ticker, name, market,
+            qty, price: buyPr, date: buyDate, note:'종목 추가 시 자동 기록'
+          })
+        });
+      } catch(e) { console.warn('거래내역 기록 실패:', e); }
+    }
+    closeManualAddModal();
+    showToast(`✅ ${name} ${formatQty(qty)}주 @${buyPr.toLocaleString()}원 추가 (총 ${cost.toLocaleString()}원)`);
+    refreshAll();
+  } catch(e) {
+    const errEl = document.getElementById('ma-err');
+    if (errEl) { errEl.textContent = '추가 실패: ' + e.message; errEl.classList.remove('hidden'); }
+  }
 }
 
 function openResetModal() {
@@ -3594,7 +5574,6 @@ function renderAlarmLog() {
 }
 
 // ── 알림 & 자동 새로고침 ──────────────────────────────────
-const ALERT_THRESHOLD = 5;   // 5% 변동 알람
 let AUTO_INTERVAL = parseInt(localStorage.getItem('refreshInterval') || '300');
 let _prevPrices = {};         // { ticker: price }
 let _countdown  = AUTO_INTERVAL;
@@ -3607,8 +5586,46 @@ async function requestNotifPermission() {
   if (Notification.permission !== 'denied') {
     const perm = await Notification.requestPermission();
     _notifGranted = perm === 'granted';
+    if (!_notifGranted) showNotifBlockedHint();
   }
 }
+
+// 알림 권한 거부 시 안내 (브라우저 설정에서만 변경 가능)
+function showNotifBlockedHint() {
+  const dismissed = localStorage.getItem('notif_blocked_dismissed_v2');
+  if (dismissed) return;
+  const el = document.createElement('div');
+  el.id = 'notif-blocked-banner';
+  el.className = 'fixed top-4 right-4 z-[80] card p-4 max-w-sm shadow-2xl';
+  el.style.cssText = 'border:2px solid #fdcb6e;background:#fff8e1';
+  el.innerHTML = `
+    <div class="flex items-start gap-3">
+      <span class="text-2xl">🔕</span>
+      <div class="flex-1">
+        <p class="text-sm font-bold text-dark mb-1">알림 권한이 차단되었습니다</p>
+        <p class="text-xs text-muted mb-2">가격 알람, 뉴스 구독, 업데이트 알림을 받으려면:</p>
+        <ol class="text-xs text-dark list-decimal list-inside space-y-0.5 mb-3">
+          <li>주소창 왼쪽 🔒 아이콘 클릭</li>
+          <li>"알림" 권한을 <b>허용</b>으로 변경</li>
+          <li>앱 새로고침 (F5)</li>
+        </ol>
+        <div class="flex gap-2">
+          <button onclick="document.getElementById('notif-blocked-banner').remove();localStorage.setItem('notif_blocked_dismissed_v2','1')"
+            class="text-xs px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg font-medium">알겠습니다</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(el);
+}
+
+// 권한 차단 상태이면 부팅 시 한 번만 안내
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    if ('Notification' in window && Notification.permission === 'denied') {
+      showNotifBlockedHint();
+    }
+  }, 8000);
+});
 
 function sendNotif(title, body, icon) {
   if (_notifGranted) {
@@ -3619,13 +5636,21 @@ function sendNotif(title, body, icon) {
   }
 }
 
-function showToast(msg) {
+function showToast(msg, type) {
   const el = document.createElement('div');
-  el.className = 'fixed bottom-6 right-6 z-50 bg-dark text-white text-sm px-5 py-3 rounded-2xl shadow-xl max-w-xs';
-  el.style.animation = 'fadeInUp .3s ease';
-  el.textContent = msg;
+  // type: 'error' (빨강 + 8초), 'success' (기본 + 4초), 기본 (5초)
+  const isError = type === 'error' || /❌|실패|오류|error/i.test(msg);
+  const dur = isError ? 8000 : 4500;
+  // 다크모드 지원: bg-dark가 다크에서 안 보일 수 있어 직접 스타일
+  const isDark = document.body.classList.contains('dark');
+  const bg = isError ? '#e17055' : (isDark ? '#2a3050' : '#1a1a2e');
+  const color = '#ffffff';
+  el.className = 'fixed bottom-6 right-6 z-[99] text-sm px-5 py-3 rounded-2xl shadow-2xl max-w-md flex items-center gap-2';
+  el.style.cssText = `background:${bg};color:${color};animation:fadeInUp .3s ease;border:1px solid ${isError?'#c0392b':'rgba(255,255,255,0.1)'};font-weight:500`;
+  el.innerHTML = `<span style="flex:1">${msg}</span>
+    <button onclick="this.parentElement.remove()" style="opacity:0.6;cursor:pointer;background:none;border:none;color:white;font-size:18px;line-height:1;padding:0 4px" title="닫기">×</button>`;
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 6000);
+  setTimeout(() => { try { el.remove(); } catch(e){} }, dur);
 }
 
 function checkPriceAlerts(holdings) {
@@ -3746,8 +5771,36 @@ function refreshAll(auto = false) {
   Promise.all(promises).then(() => {
     setRefreshSpinning(false);
     document.getElementById('update-time').textContent = '마지막 업데이트: ' + new Date().toLocaleString('ko-KR');
+    updateMarketStatus();
   });
 }
+
+// 시장 개장 상태 표시 (KR / US)
+function updateMarketStatus() {
+  const el = document.getElementById('market-status-badges');
+  if (!el) return;
+  const now = new Date();
+  const dayKR = now.getDay(); // 0=일, 6=토
+  // 한국 시간 기준 시:분
+  const krH = now.getHours();
+  const krM = now.getMinutes();
+  const krMin = krH * 60 + krM;
+  // KR: 평일 09:00~15:30
+  const krOpen = (dayKR >= 1 && dayKR <= 5) && krMin >= 540 && krMin < 930;
+  // 미국 시간 (NYSE): KST 기준 22:30~05:00 (서머타임 시), 평소 23:30~06:00
+  // 간단하게 KST 기준 23:30~06:00을 개장으로 (평일)
+  const usDay = (dayKR >= 1 && dayKR <= 5) || (dayKR === 6 && krMin < 360);
+  const usOpen = usDay && (krMin >= 1410 || krMin < 360); // 23:30 ~ 06:00
+  const make = (label, isOpen) => {
+    const color = isOpen ? '#00b894' : '#636e72';
+    const dot = isOpen ? '🟢' : '⚪';
+    const txt = isOpen ? '장중' : '장 마감';
+    return `<span class="text-xs px-1.5 py-0.5 rounded-full font-medium" style="background:${color}15;color:${color}" title="${txt}">${dot} ${label}</span>`;
+  };
+  el.innerHTML = make('🇰🇷', krOpen) + make('🇺🇸', usOpen);
+}
+
+setInterval(updateMarketStatus, 60000); // 1분마다 갱신
 
 // loadPortfolio에 알람 체크 인자 추가
 async function loadPortfolio(checkAlerts = false) {
@@ -3795,52 +5848,85 @@ function parseTextInput() {
 
   const TICKER_MAP = {
     '마이크로소프트': ['MSFT','US'], '애플': ['AAPL','US'], '엔비디아': ['NVDA','US'],
-    '쿠팡': ['CPNG','US'], '테슬라': ['TSLA','US'], '한화그룹': ['462330','KR'],
-    'PLUS 한화그룹주': ['462330','KR'],
+    '구글': ['GOOGL','US'], '알파벳': ['GOOGL','US'], '아마존': ['AMZN','US'],
+    '메타': ['META','US'], '쿠팡': ['CPNG','US'], '테슬라': ['TSLA','US'],
+    '한화그룹': ['462330','KR'], 'PLUS 한화그룹주': ['462330','KR'],
+    '삼성전자': ['005930','KR'], 'SK하이닉스': ['000660','KR'],
+    '네이버': ['035420','KR'], '카카오': ['035720','KR'],
+    'LG에너지솔루션': ['373220','KR'], '현대차': ['005380','KR'],
   };
 
   const holdings = [];
   const lines = raw.split('\n').map(l => l.trim()).filter(l => l);
 
-  for (const line of lines) {
-    // 헤더 줄 건너뛰기
-    if (/종목|보유|수량|평가|변동/.test(line)) continue;
+  // ── 멀티라인 형식 감지 (줄바꿈으로 구분된 블록) ──
+  // "종목명 / 주식 수: X주 / 가격: X원 / 변동: X원" 패턴
+  const isMultiLine = lines.some(l => /^(주식\s*수|수량|가격|평가|변동)\s*[:：]/.test(l));
 
-    // 탭 또는 다중 공백으로 분리
-    const cols = line.split(/\t+/).map(c => c.trim());
-    if (cols.length < 3) continue;
-
-    const name = cols[0];
-    if (!name || name.length < 2) continue;
-
-    // 수량
-    const qtyStr = cols[1] || '';
-    const qtyM = qtyStr.match(/([\d.]+)\s*주/);
-    if (!qtyM) continue;
-    const qty = parseFloat(qtyM[1]);
-
-    // 평가금액
-    const valStr = cols[2] || '';
-    const valM = valStr.replace(/,/g, '').match(/[\d]+/);
-    if (!valM) continue;
-    const currentValue = parseInt(valM[0]);
-
-    // 변동액
-    let profit = 0;
-    if (cols[3]) {
-      const pm = cols[3].replace(/,/g, '').match(/([+\-]?)\s*([\d]+)/);
-      if (pm) profit = (pm[1] === '-' ? -1 : 1) * parseInt(pm[2]);
+  if (isMultiLine) {
+    let cur = null;
+    for (const line of lines) {
+      // 주식 수 / 수량
+      const qtyM = line.match(/(?:주식\s*수|수량)\s*[:：]\s*([\d,.]+)\s*주/);
+      if (qtyM && cur) { cur.qty = parseFloat(qtyM[1].replace(/,/g, '')); continue; }
+      // 가격 / 평가금액
+      const valM = line.match(/(?:가격|평가|평가금액)\s*[:：]\s*([\d,]+)\s*원/);
+      if (valM && cur) { cur.val = parseInt(valM[1].replace(/,/g, '')); continue; }
+      // 변동
+      const chgM = line.match(/변동\s*[:：]\s*([+\-]?)([\d,]+)\s*원/);
+      if (chgM && cur) { cur.profit = (chgM[1]==='-'?-1:1) * parseInt(chgM[2].replace(/,/g, '')); continue; }
+      // 위 패턴에 안 걸리면 종목명
+      if (!/^(주식|수량|가격|평가|변동|보유)/.test(line) && line.length >= 1) {
+        if (cur && cur.qty) {
+          // 이전 종목 저장
+          let ticker = null, market = 'US';
+          for (const [k, [t, m]] of Object.entries(TICKER_MAP)) {
+            if (cur.name.includes(k) || k.includes(cur.name)) { ticker = t; market = m; break; }
+          }
+          if (!ticker) ticker = cur.name.replace(/[^A-Z0-9]/gi,'').toUpperCase().slice(0,6) || cur.name.slice(0,4);
+          const cost = Math.round((cur.val||0) - (cur.profit||0));
+          holdings.push({ name: cur.name, ticker, market, qty: cur.qty, cost, current_value: cur.val||0, profit: cur.profit||0, profit_pct: cost ? parseFloat(((cur.profit||0)/cost*100).toFixed(1)) : 0 });
+        }
+        cur = { name: line, qty: 0, val: 0, profit: 0 };
+      }
     }
-
-    // 티커 매핑
-    let ticker = null, market = 'US';
-    for (const [k, [t, m]] of Object.entries(TICKER_MAP)) {
-      if (name.includes(k) || k.includes(name)) { ticker = t; market = m; break; }
+    // 마지막 종목
+    if (cur && cur.qty) {
+      let ticker = null, market = 'US';
+      for (const [k, [t, m]] of Object.entries(TICKER_MAP)) {
+        if (cur.name.includes(k) || k.includes(cur.name)) { ticker = t; market = m; break; }
+      }
+      if (!ticker) ticker = cur.name.replace(/[^A-Z0-9]/gi,'').toUpperCase().slice(0,6) || cur.name.slice(0,4);
+      const cost = Math.round((cur.val||0) - (cur.profit||0));
+      holdings.push({ name: cur.name, ticker, market, qty: cur.qty, cost, current_value: cur.val||0, profit: cur.profit||0, profit_pct: cost ? parseFloat(((cur.profit||0)/cost*100).toFixed(1)) : 0 });
     }
-    if (!ticker) ticker = name.replace(/[^A-Z0-9]/gi, '').toUpperCase().slice(0, 6) || name.slice(0, 4);
-
-    const cost = Math.round(currentValue - profit);
-    holdings.push({ name, ticker, market, qty, cost, current_value: currentValue, profit, profit_pct: profit && cost ? parseFloat((profit/cost*100).toFixed(1)) : 0 });
+  } else {
+    // ── 기존 탭 구분 형식 ──
+    for (const line of lines) {
+      if (/종목|보유|수량|평가|변동/.test(line)) continue;
+      const cols = line.split(/\t+/).map(c => c.trim());
+      if (cols.length < 3) continue;
+      const name = cols[0];
+      if (!name || name.length < 2) continue;
+      const qtyM = (cols[1]||'').match(/([\d.]+)\s*주/);
+      if (!qtyM) continue;
+      const qty = parseFloat(qtyM[1]);
+      const valM = (cols[2]||'').replace(/,/g,'').match(/[\d]+/);
+      if (!valM) continue;
+      const currentValue = parseInt(valM[0]);
+      let profit = 0;
+      if (cols[3]) {
+        const pm = cols[3].replace(/,/g,'').match(/([+\-]?)\s*([\d]+)/);
+        if (pm) profit = (pm[1]==='-'?-1:1) * parseInt(pm[2]);
+      }
+      let ticker = null, market = 'US';
+      for (const [k, [t, m]] of Object.entries(TICKER_MAP)) {
+        if (name.includes(k) || k.includes(name)) { ticker = t; market = m; break; }
+      }
+      if (!ticker) ticker = name.replace(/[^A-Z0-9]/gi,'').toUpperCase().slice(0,6) || name.slice(0,4);
+      const cost = Math.round(currentValue - profit);
+      holdings.push({ name, ticker, market, qty, cost, current_value: currentValue, profit, profit_pct: profit && cost ? parseFloat((profit/cost*100).toFixed(1)) : 0 });
+    }
   }
 
   if (!holdings.length) {
@@ -4338,13 +6424,22 @@ async function deleteNote() {
 // ══════════════════════════════════════════════════════════
 let _benchmarkData = null;
 let _benchmarkPeriod = '1달';
+let _benchmarkOpen = true;
 
-async function loadBenchmark() {
+function toggleBenchmark() {
+  const body = document.getElementById('benchmark-body');
+  const arrow = document.getElementById('benchmark-arrow');
+  _benchmarkOpen = !_benchmarkOpen;
+  body.classList.toggle('hidden', !_benchmarkOpen);
+  arrow.style.transform = _benchmarkOpen ? '' : 'rotate(-90deg)';
+}
+
+async function loadBenchmark(force) {
   const sec = document.getElementById('benchmark-section');
   const body = document.getElementById('benchmark-body');
   sec.classList.remove('hidden');
-  if (_benchmarkData) { renderBenchmark(); return; }
-  body.innerHTML = '<p class="text-sm text-muted text-center py-4">불러오는 중...</p>';
+  if (_benchmarkData && !force) { renderBenchmark(); return; }
+  body.innerHTML = '<p class="text-sm text-muted text-center py-4">📊 시장 데이터 불러오는 중...</p>';
   try {
     const res = await fetch('/api/benchmark');
     _benchmarkData = await res.json();
@@ -4357,13 +6452,14 @@ async function loadBenchmark() {
 
 function renderBenchmark() {
   const body = document.getElementById('benchmark-body');
-  const d = _benchmarkData;
+  const d = _benchmarkData || {};
   const periods = d.periods || [];
-  const period = _benchmarkPeriod;
+  const meta    = d.meta || {};
+  const period  = _benchmarkPeriod;
 
   const colors = { '내 포트폴리오': '#6c5ce7', 'S&P500': '#00b894', '나스닥': '#74b9ff', '코스피': '#fdcb6e' };
   const items = [
-    { label: '내 포트폴리오', pct: d.portfolio?.[period] },
+    { label: '내 포트폴리오', pct: d.portfolio?.[period], isPort: true },
     ...Object.entries(d.benchmarks || {}).map(([k, v]) => ({ label: k, pct: v[period] }))
   ];
   const max = Math.max(...items.map(i => Math.abs(i.pct || 0)), 1);
@@ -4373,25 +6469,60 @@ function renderBenchmark() {
       class="px-3 py-1 text-xs rounded-lg font-medium transition ${p === period ? 'bg-accent text-white' : 'text-muted hover:bg-gray-100'}">${p}</button>`
   ).join('');
 
+  // 상단 안내 (포트폴리오 없음 / 환율 표시)
+  let infoBar = '';
+  if (!meta.has_portfolio_data && (meta.holdings_count || 0) === 0) {
+    infoBar = `
+      <div class="rounded-lg bg-yellow-50 border border-yellow-200 px-3 py-2 mb-3 text-xs text-dark">
+        ⚠️ 보유 종목이 없어 <b>내 포트폴리오 수익률</b>을 계산할 수 없습니다. 포트폴리오에 종목을 추가해보세요.
+      </div>`;
+  } else if (!meta.has_portfolio_data) {
+    infoBar = `
+      <div class="rounded-lg bg-orange-50 border border-orange-200 px-3 py-2 mb-3 text-xs text-dark">
+        ⚠️ 보유 종목의 시장 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.
+      </div>`;
+  }
+
+  // 기간별 비교: 가장 높은 수익률 종목 배지
+  const validItems = items.filter(i => i.pct !== null && i.pct !== undefined);
+  let winnerBadge = '';
+  if (validItems.length > 0) {
+    const winner = validItems.reduce((a,b) => (a.pct >= b.pct ? a : b));
+    const winColor = winner.pct >= 0 ? 'pos' : 'neg';
+    winnerBadge = `<span class="text-xs text-muted">🏆 ${period} 최고: <b class="${winColor}">${winner.label} ${winner.pct>=0?'+':''}${winner.pct.toFixed(2)}%</b></span>`;
+  }
+
   body.innerHTML = `
-    <div class="flex gap-1 flex-wrap mb-3">${tabs}</div>
+    ${infoBar}
+    <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+      <div class="flex gap-1 flex-wrap">${tabs}</div>
+      ${winnerBadge}
+    </div>
     ${items.map(item => {
-      if (item.pct === null || item.pct === undefined) return `
-        <div class="flex items-center gap-3 opacity-40">
+      if (item.pct === null || item.pct === undefined) {
+        const msg = item.isPort && (meta.holdings_count || 0) === 0
+          ? '보유 종목 없음'
+          : '데이터 없음';
+        return `
+        <div class="flex items-center gap-3 opacity-50">
           <span class="text-xs font-medium text-muted w-28 shrink-0">${item.label}</span>
-          <div class="flex-1 text-xs text-muted">데이터 없음</div>
+          <div class="flex-1 h-6 bg-gray-100 rounded-lg flex items-center px-2"><span class="text-xs text-muted">${msg}</span></div>
+          <span class="text-xs text-muted w-16 text-right">-</span>
         </div>`;
+      }
       const plus = item.pct >= 0;
       const w = Math.round(Math.abs(item.pct) / max * 100);
       const col = colors[item.label] || '#6c5ce7';
       return `<div class="flex items-center gap-3">
-        <span class="text-xs font-medium text-muted w-28 shrink-0">${item.label}</span>
+        <span class="text-xs font-medium ${item.isPort?'text-accent font-bold':'text-muted'} w-28 shrink-0">${item.isPort?'👤 ':''}${item.label}</span>
         <div class="flex-1 h-6 bg-gray-100 rounded-lg overflow-hidden">
           <div class="h-full rounded-lg transition-all duration-700" style="width:${w}%;background:${col};opacity:0.85;min-width:4px"></div>
         </div>
         <span class="text-xs font-bold w-16 text-right ${plus ? 'pos' : 'neg'}">${plus ? '+' : ''}${item.pct.toFixed(2)}%</span>
       </div>`;
-    }).join('')}`;
+    }).join('')}
+    ${meta.usd_krw ? `<p class="text-xs text-light mt-3">💱 환율 기준: 1달러 = ${meta.usd_krw.toLocaleString()}원 · US 종목은 KRW로 환산 비교됩니다</p>` : ''}
+  `;
 }
 
 // ══════════════════════════════════════════════════════════

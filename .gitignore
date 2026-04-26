@@ -18,6 +18,11 @@ config.json
 *.xlsx
 *.xls
 
+# 빌드 산출물 / Supabase 시크릿 포함된 설치기 (로컬에서만 빌드)
+installer.iss
+Output/
+StockDashboard_v*.zip
+
 # 환경
 .env
 .env.*
