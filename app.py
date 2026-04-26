@@ -62,7 +62,7 @@ def _gen_access_code(length=6):
     return ''.join(_rnd.choices(chars, k=length))
 
 # ── 버전 정보 ─────────────────────────────────────────────
-APP_VERSION = "v1.4.1"
+APP_VERSION = "v1.4.2"
 APP_NAME    = "내 주식 대시보드"
 
 # ── PyInstaller 번들 환경 대응 ───────────────────────────
@@ -507,19 +507,14 @@ def api_update_check():
             latest_version_full = latest_version
         update_available = _is_newer(latest_version_full, APP_VERSION)
 
-        # 인스톨러 .exe + ZIP 자산 모두 찾기
+        # 인스톨러 .exe 자산 찾기
         download_url = ''
-        zip_url = ''
         installer_size = 0
-        zip_size = 0
         for asset in latest.get('assets', []):
             name = asset.get('name', '').lower()
             if name.endswith('.exe') and not download_url:
                 download_url = asset.get('browser_download_url', '')
                 installer_size = asset.get('size', 0)
-            elif name.endswith('.zip') and not zip_url:
-                zip_url = asset.get('browser_download_url', '')
-                zip_size = asset.get('size', 0)
 
         body = latest.get('body', '') or ''
         return jsonify({
@@ -527,10 +522,8 @@ def api_update_check():
             'current_version':   APP_VERSION,
             'latest_version':    latest_version_full,
             'release_notes':     body,
-            'download_url':      download_url,       # legacy: .exe 인스톨러
+            'download_url':      download_url,
             'installer_size':    installer_size,
-            'zip_url':           zip_url,            # 신규: ZIP 자동 업데이트
-            'zip_size':          zip_size,
             'is_mandatory':      ('[MANDATORY]' in body or '[필수]' in body),
             'published_at':      latest.get('published_at', ''),
             'html_url':          latest.get('html_url', ''),
@@ -588,278 +581,10 @@ def api_update_history():
         return jsonify({'versions': [], 'error': str(e)})
 
 
-def _handle_launcher_update(url, launcher_exe):
-    """런처 패턴: pending_update.zip 저장 + 앱 종료 → 런처 재실행 → 자동 적용"""
-    try:
-        import threading as _th, subprocess as _sp
-        appdata = os.environ.get('LOCALAPPDATA') or os.environ.get('APPDATA') or os.path.expanduser('~')
-        update_root = os.path.join(appdata, 'StockDashboard')
-        os.makedirs(update_root, exist_ok=True)
-        pending_zip = os.path.join(update_root, 'pending_update.zip')
-        tmp_zip = pending_zip + '.tmp'
-
-        # 1. ZIP 다운로드 (먼저 .tmp로 → 완료 후 atomic rename)
-        with requests.get(url, stream=True, timeout=180) as resp:
-            resp.raise_for_status()
-            with open(tmp_zip, 'wb') as f:
-                for chunk in resp.iter_content(chunk_size=65536):
-                    if chunk: f.write(chunk)
-
-        size = os.path.getsize(tmp_zip)
-        if size < 1_000_000:
-            try: os.remove(tmp_zip)
-            except: pass
-            return jsonify({'ok': False, 'error': f'ZIP 파일 손상 ({size}B)'}), 500
-
-        # 2. atomic rename → pending_update.zip
-        if os.path.exists(pending_zip):
-            try: os.remove(pending_zip)
-            except: pass
-        os.rename(tmp_zip, pending_zip)
-
-        # 3. 런처 재실행 예약 (현재 앱 종료 후 1초 뒤)
-        DETACHED_PROCESS = 0x00000008
-        CREATE_NEW_PROCESS_GROUP = 0x00000200
-        # 헬퍼: 1.5초 대기 후 런처 실행 (현재 앱이 완전히 종료될 시간 확보)
-        helper_bat = os.path.join(update_root, 'restart_helper.bat')
-        bat_content = (
-            '@echo off\r\n'
-            'timeout /t 2 /nobreak >nul\r\n'
-            f'start "" "{launcher_exe}"\r\n'
-            'del "%~f0" >nul 2>&1\r\n'
-        )
-        with open(helper_bat, 'w', encoding='cp949', errors='ignore', newline='') as f:
-            f.write(bat_content)
-
-        CREATE_NO_WINDOW = 0x08000000
-        _sp.Popen(['cmd.exe', '/c', helper_bat],
-            creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW,
-            close_fds=True)
-
-        # 4. 3초 후 자살
-        def _suicide():
-            import time as _t
-            _t.sleep(3)
-            try: os._exit(0)
-            except: pass
-        _th.Thread(target=_suicide, daemon=True).start()
-
-        return jsonify({
-            'ok': True,
-            'method': 'launcher',
-            'size_mb': round(size / (1024*1024), 1),
-            'pending_path': pending_zip,
-            'launcher_path': launcher_exe,
-            'message': '✅ 다운로드 완료! 3초 후 앱 종료 → 런처가 자동으로 새 버전 적용 → 재시작 (UAC·클릭 없음)',
-        })
-    except Exception as e:
-        return jsonify({'ok': False, 'error': f'런처 업데이트 실패: {e}'}), 500
-
-
-@app.route('/api/update/install-zip', methods=['POST'])
-def api_update_install_zip():
-    """
-    🚀 v1.4.0+ 런처 패턴 (Squirrel/Discord 방식)
-
-    흐름:
-      1. ZIP 다운로드 → %LOCALAPPDATA%\\StockDashboard\\pending_update.zip 으로 저장
-      2. 앱 종료 → 런처(StockDashboard.exe)가 다음 실행 시 자동으로 ZIP 적용
-      3. 파일 락 없음! (앱이 종료된 후 적용되므로)
-
-    런처 부재 시 (v1.3.x 이하 호환): legacy 배치 스크립트 폴백
-    """
-    data = request.get_json() or {}
-    url = (data.get('url') or '').strip()
-    if not url:
-        return jsonify({'ok': False, 'error': 'ZIP URL이 없습니다'}), 400
-
-    if not getattr(sys, 'frozen', False):
-        return jsonify({'ok': False, 'error': '개발 모드 미지원'}), 400
-
-    # ── 런처 감지: app/ 폴더 안에 있으면 런처 패턴 사용 ──
-    install_dir_check = os.path.dirname(sys.executable)
-    parent_dir = os.path.dirname(install_dir_check)
-    parent_exe = os.path.join(parent_dir, 'StockDashboard.exe')
-    is_launcher_pattern = (
-        os.path.basename(install_dir_check).lower() == 'app' and
-        os.path.exists(parent_exe)
-    )
-
-    if is_launcher_pattern:
-        # 런처 패턴: ZIP을 pending 위치에 저장 + 앱 종료 → 런처가 다음 실행 시 적용
-        return _handle_launcher_update(url, parent_exe)
-
-    # ── Pre-check 1: install_dir 쓰기 권한 확인 ──
-    install_dir_check = os.path.dirname(sys.executable)
-    if not os.access(install_dir_check, os.W_OK):
-        return jsonify({
-            'ok': False,
-            'use_legacy': True,  # 클라이언트가 인스톨러 방식으로 폴백
-            'install_dir': install_dir_check,
-            'error': f'설치 폴더에 쓰기 권한 없음 (Program Files에 설치된 듯).\n경로: {install_dir_check}\n→ 인스톨러 방식으로 자동 전환합니다.'
-        }), 400
-
-    try:
-        import tempfile, subprocess, threading as _th, zipfile, shutil
-        tmp_dir = tempfile.gettempdir()
-        zip_path = os.path.join(tmp_dir, 'StockDashboard_update.zip')
-
-        # ── Pre-check 2: 임시 폴더 쓰기 권한 ──
-        if not os.access(tmp_dir, os.W_OK):
-            return jsonify({'ok': False, 'error': f'임시 폴더 쓰기 권한 없음: {tmp_dir}'}), 500
-
-        # 1. ZIP 다운로드
-        with requests.get(url, stream=True, timeout=180) as resp:
-            resp.raise_for_status()
-            with open(zip_path, 'wb') as f:
-                for chunk in resp.iter_content(chunk_size=65536):
-                    if chunk: f.write(chunk)
-
-        size = os.path.getsize(zip_path)
-        if size < 1_000_000:
-            try: os.remove(zip_path)
-            except: pass
-            return jsonify({'ok': False, 'error': f'ZIP 손상 ({size}B)'}), 500
-
-        # 2. ZIP 검증
-        try:
-            with zipfile.ZipFile(zip_path, 'r') as zf:
-                names = zf.namelist()
-                if not any('StockDashboard.exe' in n for n in names):
-                    raise ValueError('ZIP에 StockDashboard.exe 없음')
-        except Exception as e:
-            try: os.remove(zip_path)
-            except: pass
-            return jsonify({'ok': False, 'error': f'ZIP 무결성 오류: {e}'}), 500
-
-        # 3. staging 폴더에 압축 해제
-        staging_dir = os.path.join(tmp_dir, 'StockDashboard_staging')
-        if os.path.exists(staging_dir):
-            try: shutil.rmtree(staging_dir, ignore_errors=True)
-            except: pass
-        with zipfile.ZipFile(zip_path, 'r') as zf:
-            zf.extractall(staging_dir)
-        # ZIP 안에 'StockDashboard/' 폴더 있으면 평탄화
-        nested = os.path.join(staging_dir, 'StockDashboard')
-        if os.path.isdir(nested) and os.path.exists(os.path.join(nested, 'StockDashboard.exe')):
-            staging_dir = nested
-
-        # 4. 헬퍼 배치
-        pid = os.getpid()
-        app_exe = sys.executable
-        install_dir = os.path.dirname(app_exe)
-        install_dir_old = install_dir + '.old'
-        log_path = os.path.join(tmp_dir, 'stockdash_zip_update.log')
-        helper_path = os.path.join(tmp_dir, f'stockdash_zip_updater_{pid}.bat')
-
-        batch = (
-            '@echo off\r\n'
-            'chcp 65001 >nul 2>&1\r\n'
-            'title StockDashboard 업데이트 진행 중...\r\n'
-            'setlocal\r\n'
-            f'set "LOG={log_path}"\r\n'
-            f'set "INSTALL={install_dir}"\r\n'
-            f'set "STAGING={staging_dir}"\r\n'
-            f'set "OLDDIR={install_dir_old}"\r\n'
-            f'set "APP_EXE={app_exe}"\r\n'
-            'echo ========================================\r\n'
-            'echo  StockDashboard 업데이트 진행\r\n'
-            'echo ========================================\r\n'
-            'echo. > "%LOG%"\r\n'
-            'echo [%date% %time%] === ZIP Update Start === >> "%LOG%"\r\n'
-            'echo INSTALL=%INSTALL% >> "%LOG%"\r\n'
-            'echo STAGING=%STAGING% >> "%LOG%"\r\n'
-            '\r\n'
-            'echo [1/5] 앱 + WebView2 종료 중...\r\n'
-            'taskkill /F /IM "StockDashboard.exe" /T >nul 2>&1\r\n'
-            'taskkill /F /IM "msedgewebview2.exe" /T >nul 2>&1\r\n'
-            'echo [%date% %time%] Killed processes >> "%LOG%"\r\n'
-            'timeout /t 5 /nobreak >nul\r\n'
-            '\r\n'
-            'echo [2/5] 기존 폴더 백업 중...\r\n'
-            'if exist "%OLDDIR%" rmdir /S /Q "%OLDDIR%" >nul 2>&1\r\n'
-            'move "%INSTALL%" "%OLDDIR%" 2>>"%LOG%"\r\n'
-            'if errorlevel 1 (\r\n'
-            '  echo [에러] 폴더 백업 실패 - Program Files 권한 부족 의심\r\n'
-            '  echo [%date% %time%] MOVE INSTALL FAILED >> "%LOG%"\r\n'
-            '  goto fallback\r\n'
-            ')\r\n'
-            '\r\n'
-            'echo [3/5] 새 버전 적용 중...\r\n'
-            'move "%STAGING%" "%INSTALL%" 2>>"%LOG%"\r\n'
-            'if errorlevel 1 (\r\n'
-            '  echo [에러] 새 버전 적용 실패 - 롤백\r\n'
-            '  echo [%date% %time%] MOVE STAGING FAILED, rollback >> "%LOG%"\r\n'
-            '  move "%OLDDIR%" "%INSTALL%" >nul 2>&1\r\n'
-            '  goto fallback\r\n'
-            ')\r\n'
-            '\r\n'
-            'echo [4/5] 새 앱 실행 중...\r\n'
-            'timeout /t 2 /nobreak >nul\r\n'
-            'if exist "%APP_EXE%" (\r\n'
-            '  start "" "%APP_EXE%"\r\n'
-            '  echo [%date% %time%] Started new app >> "%LOG%"\r\n'
-            '  echo  - 새 앱 시작됨!\r\n'
-            ') else (\r\n'
-            '  echo [에러] 새 EXE 파일을 찾을 수 없음: %APP_EXE%\r\n'
-            '  echo [%date% %time%] EXE NOT FOUND >> "%LOG%"\r\n'
-            '  goto fallback\r\n'
-            ')\r\n'
-            '\r\n'
-            'echo [5/5] 옛 버전 정리 중...\r\n'
-            'timeout /t 5 /nobreak >nul\r\n'
-            'rmdir /S /Q "%OLDDIR%" >nul 2>&1\r\n'
-            'echo.\r\n'
-            'echo ✅ 업데이트 완료! 이 창은 자동으로 닫힙니다.\r\n'
-            'timeout /t 3 /nobreak >nul\r\n'
-            'goto end\r\n'
-            '\r\n'
-            ':fallback\r\n'
-            'echo.\r\n'
-            'echo === 자동 업데이트 실패 — 수동 다운로드 페이지를 엽니다 ===\r\n'
-            'echo [%date% %time%] FALLBACK >> "%LOG%"\r\n'
-            'start "" "https://github.com/1415hdfhfsg/stock-dashboard/releases/latest"\r\n'
-            'echo.\r\n'
-            'echo 위 페이지에서 최신 Setup.exe 다운로드 → 더블클릭 설치\r\n'
-            f'echo 로그: {log_path}\r\n'
-            'echo.\r\n'
-            'pause\r\n'
-            '\r\n'
-            ':end\r\n'
-            'del "%~f0" >nul 2>&1\r\n'
-        )
-        with open(helper_path, 'w', encoding='cp949', errors='ignore', newline='') as f:
-            f.write(batch)
-
-        # 5. 헬퍼 콘솔 보이게 실행 (사용자가 진행/에러 직접 확인)
-        CREATE_NEW_CONSOLE       = 0x00000010
-        CREATE_NEW_PROCESS_GROUP = 0x00000200
-        subprocess.Popen(['cmd.exe', '/c', helper_path],
-            creationflags=CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP, close_fds=True)
-
-        # 6. 3초 후 자살
-        def suicide():
-            import time as _time
-            _time.sleep(3)
-            try: os._exit(0)
-            except: pass
-        _th.Thread(target=suicide, daemon=True).start()
-
-        return jsonify({
-            'ok': True,
-            'method': 'zip',
-            'size_mb': round(size / (1024*1024), 1),
-            'message': 'ZIP 압축 해제 + 자동 패치 시작 (UAC 불필요)',
-        })
-    except Exception as e:
-        return jsonify({'ok': False, 'error': f'ZIP 업데이트 실패: {e}'}), 500
-
-
 @app.route('/api/update/install', methods=['POST'])
 def api_update_install():
     """
-    [Legacy] 인스톨러(.exe) 다운로드 + 자동 패치 + 재시작.
-    ZIP 방식이 가능하면 install-zip 사용 권장.
+    인스톨러(.exe) 다운로드 + 자동 패치 + 재시작.
 
     흐름:
       1. 인스톨러 .exe 다운로드 + 무결성 검증

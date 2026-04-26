@@ -1854,7 +1854,7 @@ tailwind.config = {
         ⬇️ 지금 업데이트
       </button>
     </div>
-    <p class="text-xs text-muted mt-2 text-center">💡 업데이트 시 앱이 종료되고 자동 재시작됩니다</p>
+    <p class="text-xs text-muted mt-2 text-center">💡 업데이트 시 인스톨러가 자동 실행됩니다 (UAC 창 → [예] 클릭)</p>
   </div>
 </div>
 
@@ -5041,14 +5041,8 @@ function closeUpdateModal() {
 }
 
 async function installUpdate() {
-  // ZIP 우선, 없으면 .exe 인스톨러로 폴백
-  const zipUrl = _updateInfo?.zip_url;
   const exeUrl = _updateInfo?.download_url;
-  const targetUrl = zipUrl || exeUrl;
-  const useZip = !!zipUrl;
-  const endpoint = useZip ? '/api/update/install-zip' : '/api/update/install';
-
-  if (!targetUrl) { showToast('❌ 다운로드 URL 없음', 'error'); return; }
+  if (!exeUrl) { showToast('❌ 다운로드 URL 없음', 'error'); return; }
 
   const btn = document.getElementById('upd-install-btn');
   const laterBtn = document.getElementById('upd-later-btn');
@@ -5057,88 +5051,56 @@ async function installUpdate() {
   const bar = document.getElementById('upd-progress-bar');
   const msg = document.getElementById('upd-progress-msg');
 
-  // 버튼 상태 업데이트 (사용자가 닫지 못하게)
   btn.disabled = true;
-  btn.textContent = useZip ? '⏳ ZIP 다운로드 중...' : '⏳ 다운로드 중...';
+  btn.textContent = '⏳ 다운로드 중...';
   if (laterBtn) laterBtn.disabled = true;
   if (manualLink) manualLink.style.pointerEvents = 'none';
 
   prog.classList.remove('hidden');
-  const sizeStr = useZip
-    ? `약 ${Math.round((_updateInfo.zip_size||50000000)/1024/1024)}MB`
-    : `약 ${Math.round((_updateInfo.installer_size||70000000)/1024/1024)}MB`;
-  msg.textContent = `📥 ${useZip?'ZIP':'인스톨러'} 다운로드 중... (${sizeStr})`;
+  const sizeStr = `약 ${Math.round((_updateInfo.installer_size||70000000)/1024/1024)}MB`;
+  msg.textContent = `📥 인스톨러 다운로드 중... (${sizeStr})`;
   bar.style.width = '15%';
 
-  // 진행 표시 애니메이션 (서버 다운로드 동안 시각적 피드백)
   let pct = 15;
   const progInterval = setInterval(() => {
-    if (pct < 80) {
-      pct += 3;
-      bar.style.width = pct + '%';
-    }
+    if (pct < 80) { pct += 3; bar.style.width = pct + '%'; }
   }, 800);
 
   try {
-    const res = await fetch(endpoint, {
+    const res = await fetch('/api/update/install', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ url: targetUrl })
+      body: JSON.stringify({ url: exeUrl })
     });
     clearInterval(progInterval);
     const d = await res.json();
     if (!d.ok) {
-      // ZIP 권한 거부 → 인스톨러로 자동 폴백
-      if (d.use_legacy && useZip && exeUrl) {
-        msg.innerHTML = '⚠️ ZIP 방식 권한 거부 (Program Files 설치)<br>👉 인스톨러 모드로 자동 전환 중...';
-        showToast('💡 권한 부족 → 인스톨러 모드로 자동 전환');
-        const fbRes = await fetch('/api/update/install', {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ url: exeUrl })
-        });
-        const fbD = await fbRes.json();
-        if (fbD.ok) {
-          msg.innerHTML = `✅ 인스톨러 다운로드 완료 (${fbD.size_mb}MB)<br>🔔 UAC 창에서 [예]를 눌러주세요!`;
-          showToast('✅ 인스톨러 실행됨 — UAC [예] 클릭하세요');
-          return;
-        } else {
-          msg.innerHTML = `<div style="color:#e17055">❌ 인스톨러 폴백 실패: ${fbD.error||'?'}</div>`;
-          showToast('❌ ' + (fbD.error || '폴백 실패'), 'error');
-        }
-      }
       prog.classList.add('hidden');
       btn.disabled = false;
       btn.textContent = '⬇️ 지금 업데이트';
       if (laterBtn) laterBtn.disabled = false;
       if (manualLink) manualLink.style.pointerEvents = 'auto';
-      // 상세 에러를 모달에 명시적으로 표시
       const errMsg = d.error || '업데이트 실패';
-      const installPath = d.install_dir ? `\n📂 설치 경로: ${d.install_dir}` : '';
       prog.classList.remove('hidden');
-      msg.innerHTML = `<div style="color:#e17055;font-size:11px;white-space:pre-wrap;text-align:left">❌ ${errMsg}${installPath}</div>`;
+      msg.innerHTML = `<div style="color:#e17055;font-size:11px;white-space:pre-wrap;text-align:left">❌ ${errMsg}</div>`;
       showToast('❌ ' + errMsg, 'error');
       return;
     }
     bar.style.width = '100%';
-    const methodLabel = useZip ? 'ZIP (UAC 없음)' : '인스톨러';
-    msg.innerHTML = `✅ <b>${d.size_mb}MB</b> 다운로드 완료!<br>${methodLabel} 자동 적용 시작...`;
+    msg.innerHTML = `✅ <b>${d.size_mb}MB</b> 다운로드 완료!<br>인스톨러 자동 실행 중...`;
 
-    // 카운트다운 표시
     let countdown = 3;
     const countdownInterval = setInterval(() => {
       countdown -= 1;
       if (countdown > 0) {
-        const hint = useZip
-          ? '<span class="text-xs">압축 해제 후 자동 재시작됩니다 (UAC 불필요)</span>'
-          : '<span class="text-xs">UAC 창이 뜨면 [예]를 눌러주세요</span>';
-        msg.innerHTML = `⏳ <b>${countdown}초 후</b> 앱이 종료됩니다.<br>${hint}`;
+        msg.innerHTML = `⏳ <b>${countdown}초 후</b> 앱이 종료됩니다.<br><span class="text-xs">UAC 창이 뜨면 [예]를 눌러주세요</span>`;
       } else {
         clearInterval(countdownInterval);
-        msg.innerHTML = '🔄 자동 패치 진행 중... 잠시만 기다려주세요.';
+        msg.innerHTML = '🔄 인스톨러 실행 중... 잠시만 기다려주세요.';
       }
     }, 1000);
 
-    showToast(`✅ ${d.size_mb}MB 다운로드 완료 — 자동 패치 시작 (${methodLabel})`);
+    showToast(`✅ ${d.size_mb}MB 다운로드 완료 — 인스톨러 자동 실행`);
   } catch(e) {
     clearInterval(progInterval);
     prog.classList.add('hidden');

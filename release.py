@@ -89,31 +89,16 @@ with open(html_path, 'w', encoding='utf-8') as f:
     f.write(html)
 print("  [OK] templates/dashboard.html")
 
-# 2. PyInstaller 빌드 (launcher → 메인 앱 순서)
-print("\n2-A) PyInstaller 런처 EXE 빌드 (launcher.spec → dist/Launcher/)")
-# 런처는 dist/Launcher/StockDashboard.exe 로 출력 (installer.iss 경로와 일치)
-result = subprocess.run(
-    [PYTHON, '-m', 'PyInstaller', 'launcher.spec', '--noconfirm', '--clean',
-     '--distpath', os.path.join(BASE_DIR, 'dist', 'Launcher')],
-    cwd=BASE_DIR, capture_output=True, text=True, encoding='utf-8', errors='replace'
-)
-if result.returncode == 0:
-    print("  [OK] 런처 빌드 성공")
-else:
-    print("  [FAIL] 런처 빌드 실패")
-    print(result.stdout[-500:] if result.stdout else '')
-    print(result.stderr[-500:] if result.stderr else '')
-    sys.exit(1)
-
-print("\n2-B) PyInstaller 메인 앱 EXE 빌드 (dashboard.spec → dist/StockDashboard/)")
+# 2. PyInstaller 빌드
+print("\n2) PyInstaller EXE 빌드 (dashboard.spec → dist/StockDashboard/)")
 result = subprocess.run(
     [PYTHON, '-m', 'PyInstaller', 'dashboard.spec', '--noconfirm', '--clean'],
     cwd=BASE_DIR, capture_output=True, text=True, encoding='utf-8', errors='replace'
 )
 if result.returncode == 0:
-    print("  [OK] 메인 앱 빌드 성공")
+    print("  [OK] 빌드 성공")
 else:
-    print("  [FAIL] 메인 앱 빌드 실패")
+    print("  [FAIL] 빌드 실패")
     print(result.stdout[-500:] if result.stdout else '')
     print(result.stderr[-500:] if result.stderr else '')
     sys.exit(1)
@@ -136,21 +121,8 @@ else:
     print(result.stdout[-500:] if result.stdout else '')
     sys.exit(1)
 
-# 4. ZIP 빌드 (메모앱 방식 자동 업데이트용)
-print("\n4) ZIP 빌드 (델타 업데이트 자산)")
-import shutil as _sh
-zip_base = os.path.join(BASE_DIR, 'Output', f'StockDashboard_{iss_ver}')
-dist_root = os.path.join(BASE_DIR, 'dist', 'StockDashboard')
-if os.path.isdir(dist_root):
-    zip_file = _sh.make_archive(zip_base, 'zip', root_dir=os.path.join(BASE_DIR, 'dist'), base_dir='StockDashboard')
-    zsize_mb = os.path.getsize(zip_file) / (1024*1024)
-    print(f"  [OK] ZIP 생성: {zip_file} ({zsize_mb:.1f} MB)")
-else:
-    zip_file = None
-    print(f"  [SKIP] dist 폴더 없음")
-
-# 5. GitHub Release 자동 생성 + 자산 업로드 (Setup.exe + ZIP)
-print("\n5) GitHub Release 자동 배포")
+# 4. GitHub Release 자동 생성 + 자산 업로드 (Setup.exe)
+print("\n4) GitHub Release 자동 배포")
 try:
     with open(os.path.join(BASE_DIR, 'config.json'), 'r', encoding='utf-8') as f:
         cfg = json.load(f)
@@ -163,13 +135,10 @@ try:
         if not os.path.exists(setup_file):
             print(f"  [FAIL] 설치기 없음: {setup_file}")
         else:
-            # gh release create + upload (Setup.exe + ZIP)
-            assets = [setup_file]
-            if zip_file and os.path.exists(zip_file):
-                assets.append(zip_file)
+            # gh release create + upload (Setup.exe)
             cmd = [
                 'gh', 'release', 'create', NEW_VERSION,
-                *assets,
+                setup_file,
                 '--repo', f'{GH_OWNER}/{GH_REPO}',
                 '--title', NEW_VERSION,
                 '--notes', RELEASE_NOTES,
