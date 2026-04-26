@@ -62,7 +62,7 @@ def _gen_access_code(length=6):
     return ''.join(_rnd.choices(chars, k=length))
 
 # ── 버전 정보 ─────────────────────────────────────────────
-APP_VERSION = "v1.4.2"
+APP_VERSION = "v1.4.3"
 APP_NAME    = "내 주식 대시보드"
 
 # ── PyInstaller 번들 환경 대응 ───────────────────────────
@@ -583,15 +583,7 @@ def api_update_history():
 
 @app.route('/api/update/install', methods=['POST'])
 def api_update_install():
-    """
-    인스톨러(.exe) 다운로드 + 자동 패치 + 재시작.
-
-    흐름:
-      1. 인스톨러 .exe 다운로드 + 무결성 검증
-      2. 헬퍼 배치 스크립트 생성 (앱 종료 → 설치 → 재시작)
-      3. 배치 스크립트 독립 실행 (사용자 화면에 별도 콘솔 창으로 진행 표시)
-      4. 본 앱 종료 → 헬퍼가 인계받아 진행
-    """
+    """인스톨러(.exe) 다운로드 후 직접 실행 — 앱은 3초 후 종료"""
     data = request.get_json() or {}
     url = (data.get('url') or '').strip()
     if not url:
@@ -601,12 +593,12 @@ def api_update_install():
         return jsonify({'ok': False, 'error': '개발 모드에서는 자동 업데이트를 지원하지 않습니다'}), 400
 
     try:
-        import tempfile, subprocess, threading as _th
+        import tempfile, threading as _th
         tmp_dir = tempfile.gettempdir()
         filename = url.rstrip('/').split('/')[-1] or 'StockDashboard_Setup.exe'
         installer_path = os.path.join(tmp_dir, filename)
 
-        # 1. 인스톨러 다운로드 (스트리밍, 무결성 검증)
+        # 1. 인스톨러 다운로드
         with requests.get(url, stream=True, timeout=180) as resp:
             resp.raise_for_status()
             with open(installer_path, 'wb') as f:
@@ -618,90 +610,25 @@ def api_update_install():
         if size < 100_000:
             try: os.remove(installer_path)
             except: pass
-            return jsonify({'ok': False, 'error': f'다운로드 파일이 손상됨 ({size}B). 잠시 후 다시 시도해주세요.'}), 500
+            return jsonify({'ok': False, 'error': f'다운로드 파일이 손상됨 ({size}B)'}), 500
 
-        # 2. 헬퍼 배치: WebView2 자식 프로세스까지 모두 종료 + 파일 락 방지
-        # 핵심 변경:
-        #   - msedgewebview2.exe 우리 앱 자식만 선별 종료
-        #   - 5초로 대기 시간 늘림 (파일 락 해제 충분히)
-        #   - 인스톨러 실패 시 직접 다운로드 페이지 자동 오픈
-        pid = os.getpid()
-        app_exe = sys.executable
-        app_exe_name = os.path.basename(app_exe)
-        log_path = os.path.join(tmp_dir, 'stockdash_update.log')
-        helper_path = os.path.join(tmp_dir, f'stockdash_updater_{pid}.bat')
-        download_page_url = 'https://github.com/1415hdfhfsg/stock-dashboard/releases/latest'
+        # 2. 인스톨러 직접 실행 (Inno Setup wizard 표시, CloseApplications=force가 앱 종료 처리)
+        DETACHED_PROCESS = 0x00000008
+        subprocess.Popen([installer_path], creationflags=DETACHED_PROCESS, close_fds=True)
 
-        batch = (
-            '@echo off\r\n'
-            'setlocal\r\n'
-            f'set "LOG={log_path}"\r\n'
-            'echo [%date% %time%] === Update Helper v3 === > "%LOG%"\r\n'
-            f'echo [%date% %time%] PID={pid} EXE={app_exe_name} >> "%LOG%"\r\n'
-            '\r\n'
-            'REM ── 1: 모든 관련 프로세스 종료 (WebView2 자식 포함) ─\r\n'
-            f'taskkill /F /IM "{app_exe_name}" /T >nul 2>&1\r\n'
-            'REM WebView2 우리 앱 자식 (storage_path 매칭) 종료\r\n'
-            'wmic process where "name=\'msedgewebview2.exe\' and commandline like \'%%StockDashboard%%\'" delete >nul 2>&1\r\n'
-            'echo [%date% %time%] Killed app + WebView2 processes >> "%LOG%"\r\n'
-            'REM 파일 락 해제 충분 대기\r\n'
-            'timeout /t 5 /nobreak >nul\r\n'
-            '\r\n'
-            'REM ── 2: 인스톨러 실행 (UI 표시, UAC 정상) ─\r\n'
-            'echo [%date% %time%] Launching installer >> "%LOG%"\r\n'
-            f'"{installer_path}" /SP- /NOICONS /NORESTART\r\n'
-            'set "CODE=%errorlevel%"\r\n'
-            'echo [%date% %time%] Installer exit code=%CODE% >> "%LOG%"\r\n'
-            '\r\n'
-            'REM ── 3: 파일 시스템 안정화 ─\r\n'
-            'timeout /t 5 /nobreak >nul\r\n'
-            '\r\n'
-            'REM ── 4: 결과 처리 ─\r\n'
-            f'if exist "{app_exe}" (\r\n'
-            '    echo [%date% %time%] EXE exists, launching new app >> "%LOG%"\r\n'
-            f'    start "" "{app_exe}"\r\n'
-            ') else (\r\n'
-            '    echo [%date% %time%] FAIL - opening download page >> "%LOG%"\r\n'
-            f'    start "" "{download_page_url}"\r\n'
-            ')\r\n'
-            '\r\n'
-            'REM ── 5: 정리 ─\r\n'
-            'timeout /t 3 /nobreak >nul\r\n'
-            'del "%~f0" >nul 2>&1\r\n'
-        )
-        with open(helper_path, 'w', encoding='cp949', errors='ignore', newline='') as f:
-            f.write(batch)
+        # 3. 3초 후 앱 종료 (인스톨러가 실행 중인 앱을 닫기 전에 먼저 정리 종료)
+        def _quit():
+            import time as _t
+            _t.sleep(3)
+            os._exit(0)
+        _th.Thread(target=_quit, daemon=True).start()
 
-        # 3. 헬퍼 배치 백그라운드 실행 (사용자에게 cmd 창 안 보임)
-        DETACHED_PROCESS        = 0x00000008
-        CREATE_NEW_PROCESS_GROUP = 0x00000200
-        CREATE_NO_WINDOW         = 0x08000000
-        subprocess.Popen(
-            ['cmd.exe', '/c', helper_path],
-            creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW,
-            close_fds=True,
-        )
+        return jsonify({'ok': True, 'size_mb': round(size / (1024 * 1024), 1)})
 
-        # 4. 3초 후 본 앱 강제 종료 (헬퍼의 taskkill보다 먼저 cleanly 종료)
-        def suicide():
-            import time as _time
-            _time.sleep(3)
-            try:
-                os._exit(0)
-            except Exception:
-                pass
-        _th.Thread(target=suicide, daemon=True).start()
-
-        return jsonify({
-            'ok': True,
-            'size_mb':  round(size / (1024*1024), 1),
-            'message':  '✅ 다운로드 완료! 5초 후 자동 설치가 시작됩니다.\n\n🔔 UAC 창이 뜨면 [예]를 눌러주세요.\n진행 콘솔이 별도 창으로 표시되며, 설치 완료 후 앱이 자동으로 재시작됩니다.',
-            'log_path': log_path,
-        })
     except requests.exceptions.RequestException as e:
-        return jsonify({'ok': False, 'error': f'다운로드 실패: {e}. 인터넷 연결을 확인해주세요.'}), 500
+        return jsonify({'ok': False, 'error': f'다운로드 실패: {e}'}), 500
     except Exception as e:
-        return jsonify({'ok': False, 'error': f'업데이트 실패: {e}'}), 500
+        return jsonify({'ok': False, 'error': str(e)}), 500
 
 @app.route('/api/settings')
 def api_settings():

@@ -1,10 +1,10 @@
 """
-내 주식 대시보드 v1.4.2
+내 주식 대시보드 v1.4.3
 실행 진입점 — 데스크탑 앱 (pywebview) / 클라우드 배포 모두 지원
 """
 import sys, os, threading, time, socket
 
-APP_VERSION = "v1.4.2"
+APP_VERSION = "v1.4.3"
 
 IS_SERVER = bool(os.environ.get('RENDER') or os.environ.get('FLY') or os.environ.get('SERVER_MODE'))
 
