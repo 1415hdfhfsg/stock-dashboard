@@ -25,7 +25,7 @@ if len(sys.argv) < 2:
 
 NEW_VERSION = sys.argv[1].strip()
 if not re.match(r'^v\d+\.\d+\.\d+', NEW_VERSION):
-    print("❌ 버전 형식: v1.2.0 또는 v1.2.0 Beta")
+    print("[ERROR] 버전 형식: v1.2.0 또는 v1.2.0 Beta")
     sys.exit(1)
 
 RELEASE_NOTES = sys.argv[2] if len(sys.argv) > 2 else f"{NEW_VERSION} 업데이트"
@@ -35,8 +35,8 @@ with open(os.path.join(BASE_DIR, 'app.py'), 'r', encoding='utf-8') as f:
     match = re.search(r'APP_VERSION\s*=\s*"([^"]+)"', f.read())
     CURRENT_VERSION = match.group(1) if match else 'unknown'
 
-print(f"📦 버전 업그레이드: {CURRENT_VERSION} → {NEW_VERSION}")
-print(f"📝 릴리즈 노트: {RELEASE_NOTES[:80]}{'...' if len(RELEASE_NOTES)>80 else ''}")
+print(f"[BUILD] 버전 업그레이드: {CURRENT_VERSION} -> {NEW_VERSION}")
+print(f"[NOTE]  릴리즈 노트: {RELEASE_NOTES[:80]}{'...' if len(RELEASE_NOTES)>80 else ''}")
 print()
 
 # 1. app.py
@@ -169,5 +169,5 @@ except Exception as e:
 print("\n" + "="*60)
 print(f"  배포 완료: {NEW_VERSION}")
 print("="*60)
-print(f"\n✅ 사용자에게 즉시 자동 업데이트 알림 전송됨")
+print(f"\n[OK] 사용자에게 즉시 자동 업데이트 알림 전송됨")
 print(f"   다운로드 링크: https://github.com/{cfg.get('gh_owner','')}/{cfg.get('gh_repo','')}/releases/latest")
